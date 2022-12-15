@@ -9,7 +9,7 @@
 ## React state 변수
 
 - 화면에 데이터를 표현할때 사용할 변수
-- React 는 state 변수의 값이 변경되는 것을 감지하여 화면을 ReRandering 한다
+- React 는 state 변수의 값이 변경되는 것을 감지하여 화면을 ReRendering 한다
 - state 변수는 일반 변수처럼 만들수 없고, 일반 변수처럼 값을 직접 할당할 수 없다
 
 - 일반적인 JS 변수를 만드는 방법
