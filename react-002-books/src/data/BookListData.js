@@ -1,15 +1,15 @@
 const BookListData = [
-  { b_isbm: "9790001", b_title: "자바스크립트 프로그래밍", b_author: "조현형" },
-  { b_isbm: "9790002", b_title: "몽고DB,", b_author: "크리스티나" },
-  { b_isbm: "9790003", b_title: "React", b_author: "이고잉" },
-  { b_isbm: "9790004", b_title: "자바입문", b_author: "고경희" },
-  { b_isbm: "9790005", b_title: "스프링 입문", b_author: "윤인성" },
+  { b_isbn: "9790001", b_title: "자바스크립트 프로그래밍", b_author: "조현형" },
+  { b_isbn: "9790002", b_title: "몽고DB,", b_author: "크리스티나" },
+  { b_isbn: "9790003", b_title: "React", b_author: "이고잉" },
+  { b_isbn: "9790004", b_title: "자바입문", b_author: "고경희" },
+  { b_isbn: "9790005", b_title: "스프링 입문", b_author: "윤인성" },
 ];
 
 const BookData = {
-  b_isbm,
-  b_title,
-  b_author,
+  b_isbn: "",
+  b_title: "임의 도서명",
+  b_author: "",
 };
 /**
  * JS 모듈 만들기
