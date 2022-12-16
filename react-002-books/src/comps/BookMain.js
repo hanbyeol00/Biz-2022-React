@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import "../css/Book.css";
+import Modal from "./ModalMain";
 import BookInput from "./BookInput";
 import BookList from "./BookList";
 import { getQueryData } from "../modules/NaverBookFetch";
 // default 로 export 한 모듈과 이름으로 export 한 모듈을 동시에 가져오기
 import BookListData, { BookData } from "../data/BookListData";
+import NaverBookList from "./NaverBookList";
 
 const BookMain = () => {
   // 임시로 만들어진 List 데이터를 가져와서 state 배열 생성
@@ -13,6 +15,11 @@ const BookMain = () => {
   // 한개 도서의 데이터
   // input box 에 입력한 내용을 임시 저장할 변수
   const [bookData, setBookData] = useState(BookData);
+  const [naverBookListData, setNaverBookListData] = useState([]);
+  const [openModel, setOpenModel] = useState({
+    input: false,
+    naver: false,
+  });
 
   /**
    * useEffect( 함수, [] ) 형식의 사용
@@ -21,6 +28,7 @@ const BookMain = () => {
   useEffect(() => {
     const fetchBook = async () => {
       const result = await getQueryData("자바스크립트");
+      setNaverBookListData(result);
       console.log(result);
     };
     fetchBook();
@@ -37,29 +45,38 @@ const BookMain = () => {
     ]);
   };
 
-  /**
-   * BookInput 에서 입력된 데이터는 bookData 의 b_title 속성에 반영되고 있다
-   *    이 코드는 BookInput 의 bTitleInputChange() 함수에서
-   *    bookData state 변수를 변경하는 코드가 하는 일
-   * bookData 의 b_title 이 변경되었을 때 화면에 어떤 변화를 주는 코드는
-   *    전혀 작성하지 않았다
-   * 그럼에도 불구하고 input box 에 입력된 데이터가
-   *    BookMain 의 <div>{bookData.b_title}</div> 여기에 실시간으로
-   *    반영(표시) 되고 있다.
-   *    bookData 가 state 변수이기 때문에
-   * state 변수가 어딘가에서 변경이 되면(변화가 발생하면)
-   *    react 는 state 변수를 화면에 표현하는 곳이 있는가 찾아서
-   *    자동으로 변화를 반영한다
-   */
+  const modalOpenToggle = (name) => {
+    // [name] : true
+    // 이 코드가 실행되는 원리
+    // name 변수에 "naver" 라는 문자열이 전달되어 오면 naver:true 가 만들어진다
+    // name 변수에 "input" 라는 문자열이 전달되어 오면 input:true 가 만들어진다
+    // name 변수에 "naver" 라는 문자열이 전달되어 오면
+    //      naver : !openModel["naver"] == true 와 false 를 반전시키기
+    setOpenModel({ ...openModel, [name]: !openModel[name] });
+  };
+
   return (
     <div className="Book">
       <div>{bookData.b_title}</div>
-      <BookInput
-        bookData={bookData}
-        setBookData={setBookData}
-        bookDataInsert={bookDataInsert}
-      />
       <BookList bookListData={bookListData} />
+      <div>
+        <button onClick={() => modalOpenToggle("input")}>입력창</button>
+        <button onClick={() => modalOpenToggle("naver")}>네이버</button>
+      </div>
+      <Modal open={openModel.input} close={() => modalOpenToggle("input")}>
+        <BookInput
+          bookData={bookData}
+          setBookData={setBookData}
+          bookDataInsert={bookDataInsert}
+        />
+      </Modal>
+      <Modal
+        open={openModel.naver}
+        close={() => modalOpenToggle("naver")}
+        width="1200"
+      >
+        <NaverBookList bookListData={naverBookListData} />
+      </Modal>
     </div>
   );
 };
