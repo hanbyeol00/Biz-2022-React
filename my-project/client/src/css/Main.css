@@ -1,3 +1,11 @@
+section.mainPage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.layout {
+  white-space: nowrap;
+}
 .layout header {
   padding: 1%;
   width: 100%;
@@ -45,4 +53,6 @@ nav.nav ul {
 
 nav.nav li {
   margin-left: 30px;
+}
+footer {
 }

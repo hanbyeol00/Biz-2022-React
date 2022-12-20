@@ -1,8 +1,11 @@
 import axios from "axios";
 import { useEffect } from "react";
 import "./css/App.css";
-import MainPage from "./comps/MainPage";
 import "./css/Main.css";
+import MainPage from "./comps/MainPage";
+import Layout from "./comps/Main/Layout";
+import Footer from "./comps/Footer";
+import Map from "./comps/Main/Map";
 
 function App() {
   const callApi = async () => {
@@ -14,8 +17,13 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <MainPage />
+    <div className="App">
+      <Layout />
+      <section className="mainPage">
+        <MainPage />
+        <Map />
+      </section>
+      <Footer />
     </div>
   );
 }

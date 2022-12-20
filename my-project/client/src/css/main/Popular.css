@@ -1,0 +1,16 @@
+table {
+  width: 80%;
+  margin: auto;
+  padding-top: 50px;
+}
+table tr {
+  white-space: nowrap;
+  display: grid;
+  grid-template-columns: 0.6fr 5fr 0.6fr 0.8fr 0.3fr 0.3fr;
+}
+table td {
+  border-top: 2px solid aqua;
+}
+table td:nth-of-type(2) {
+  text-align: left;
+}

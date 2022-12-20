@@ -1,11 +1,11 @@
-import Layout from "./main/Layout";
 import Slides from "./slides/Slide";
+import Popular from "./Main/Popular";
 
 const MainPage = () => {
   return (
     <div className="main">
-      <Layout />
       <Slides />
+      <Popular />
     </div>
   );
 };

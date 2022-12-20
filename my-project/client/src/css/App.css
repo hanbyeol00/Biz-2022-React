@@ -1,3 +1,9 @@
+#root {
+  height: 100%;
+}
 .App {
+  height: 100%;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
