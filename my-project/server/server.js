@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const test = require("./Router/test");
+import test from "./Router/test.js";
 
 app.use("/api", test);
 

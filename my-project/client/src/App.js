@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import "./css/App.css";
-import Layout from "./comps/Layout";
+import MainPage from "./comps/MainPage";
 import "./css/Main.css";
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
 
   return (
     <div>
-      <Layout />
+      <MainPage />
     </div>
   );
 }

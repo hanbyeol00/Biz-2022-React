@@ -1,4 +1,4 @@
-import Nav from "./Main/Nav";
+import Nav from "./Nav";
 
 const Layout = () => {
   return (
