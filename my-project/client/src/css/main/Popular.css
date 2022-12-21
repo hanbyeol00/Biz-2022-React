@@ -1,7 +1,9 @@
+h3.popular {
+  margin-top: 50px;
+}
 table {
   width: 80%;
   margin: auto;
-  padding-top: 50px;
 }
 table tr {
   white-space: nowrap;

@@ -1,18 +1,14 @@
-// import { useState } from "react";
+import { useTodoContext } from "../Context/TodoContext";
 
-const TodoInput = (props) => {
-  // state 를 제거하고 TodoMain으로 부터 state 받기
-  const { todoInsert, todoContent, setTodoContent } = props;
-
-  // TodoInput 에 있는 state 를 TodoMain 으로 이동하기
-  // const [todoContent, setTodoContent] = useState("");
+const TodoInput = () => {
+  //  ContextProvider 로 부터 state 관련 변수, 함수 받기
+  const { todoInsert, todoContent, setTodoContent } = useTodoContext();
 
   /**
    * 추가 button 을 클릭했을때 사용할 event
    */
   const onClickHandler = () => {
     todoInsert(todoContent.t_content);
-    // setTodoContent("");
   };
 
   /**
@@ -30,7 +26,12 @@ const TodoInput = (props) => {
         onChange={onChangeHandler}
         value={todoContent.t_content}
       />
-      <button onClick={onClickHandler}>추가</button>
+      <button
+        onClick={onClickHandler}
+        disabled={todoContent.t_content.length < 5}
+      >
+        Enter
+      </button>
     </div>
   );
 };

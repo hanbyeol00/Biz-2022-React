@@ -1,18 +1,11 @@
+import { useTodoContext } from "../Context/TodoContext";
 import TodoItem from "./TodoItem";
 
-const TodoList = (props) => {
-  const { todoContentList, todoDelete, todoComplete, todoEditer } = props;
+const TodoList = () => {
+  const { todoContentList } = useTodoContext();
 
   const todoListItemView = todoContentList.map((item) => {
-    return (
-      <TodoItem
-        item={item}
-        key={item.id}
-        todoDelete={todoDelete}
-        todoComplete={todoComplete}
-        todoEditer={todoEditer}
-      />
-    );
+    return <TodoItem item={item} key={item.id} />;
   });
 
   return <div>{todoListItemView}</div>;
