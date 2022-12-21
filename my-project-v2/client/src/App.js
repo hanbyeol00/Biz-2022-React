@@ -1,5 +1,3 @@
-import axios from "axios";
-import { useEffect } from "react";
 import "./css/App.css";
 import "./css/Main.css";
 import MainPage from "./comps/MainPage";
@@ -8,20 +6,20 @@ import Footer from "./comps/Footer";
 import Map from "./comps/Main/Map";
 
 function App() {
-  const callApi = async () => {
-    axios.get("/api").then((res) => console.log(res.data.test));
-  };
+  // const callApi = async () => {
+  //   axios.get("/api").then((res) => console.log(res.data.test));
+  // };
 
-  useEffect(() => {
-    callApi();
-  }, []);
+  // useEffect(() => {
+  //   callApi();
+  // }, []);
 
   return (
     <div className="App">
       <Layout />
       <section className="mainPage">
         <MainPage />
-        {/* <Map /> */}
+        <Map />
       </section>
       <Footer />
     </div>

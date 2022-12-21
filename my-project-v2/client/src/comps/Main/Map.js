@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import proj4 from "proj4";
-import axios from "axios";
 
 const { kakao } = window;
 
 const Map = () => {
-  let num = {
-    x: "",
-    y: "",
-  };
-  const [xy, setXY] = useState({
+  const [xyList, setXYList] = useState({
     x: "",
     y: "",
   });
-  const callApi = async () => {
-    axios.get("/api").then((res) => console.log(res.data));
-  };
-  useEffect(() => {
-    callApi();
-  }, []);
-  console.log(callApi());
 
-  //   const [map, setMap] = useState(null);
+  // const [map, setMap] = useState(null);
 
   /**
    *  ▪ 서부원점(GRS80)-falseY:60000 : EPSG:5185               // lat: 129 lng: 38
@@ -33,6 +21,22 @@ const Map = () => {
         ▪ 동해(울릉)원점(GRS80)-falseY:60000 : EPSG:5188    // lat: 131 lng: 38
                 ▪ +proj=tmerc +lat_0=38 +lon_0=131 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_def
    */
+  useEffect(() => {
+    const fetchApi = async () => {
+      const response = await fetch("http://localhost:5000/api");
+      return response;
+    };
+    try {
+      fetchApi()
+        .then((res) => res.json())
+        .then((data) =>
+          setXYList({ ...xyList, x: data.result[0].x, y: data.result[0].y })
+        );
+    } catch (err) {
+      console.error(err);
+    }
+    console.log(xyList);
+  }, []);
 
   useEffect(() => {
     const container = document.getElementById("map");
@@ -53,7 +57,7 @@ const Map = () => {
       position: markerPosition,
     });
     marker.setMap(kakaoMap);
-  }, []);
+  }, [setXYList]);
 
   return (
     <div
