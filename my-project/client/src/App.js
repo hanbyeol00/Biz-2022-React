@@ -21,7 +21,7 @@ function App() {
       <Layout />
       <section className="mainPage">
         <MainPage />
-        <Map />
+        {/* <Map /> */}
       </section>
       <Footer />
     </div>
