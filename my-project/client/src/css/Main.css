@@ -1,0 +1,58 @@
+section.mainPage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.layout {
+  white-space: nowrap;
+}
+.layout header {
+  padding: 1%;
+  width: 100%;
+  display: grid;
+  grid-template-areas: "img . . . . . . . . . input . . . . . . . . login signUp";
+}
+.layout div.img,
+.layout div.login,
+.layout div.signUp {
+  line-height: 55px;
+}
+
+.layout div.img {
+  grid-area: img;
+}
+.layout input {
+  grid-area: input;
+  padding: 12px;
+  border-radius: 15px;
+  border: 1px solid #777;
+  outline: none;
+}
+
+.layout div.login {
+  grid-area: login;
+}
+.layout div.signUp {
+  grid-area: signUp;
+}
+
+nav.nav {
+  font-size: 20px;
+  padding: 10px;
+  font-weight: 900;
+  color: #666;
+  border-top: 2px solid #eee;
+  border-bottom: 2px solid #eee;
+}
+
+nav.nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+}
+
+nav.nav li {
+  margin-left: 30px;
+}
+footer {
+}
