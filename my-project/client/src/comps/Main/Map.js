@@ -1,10 +1,24 @@
 import React, { useEffect, useState, useCallback } from "react";
 import proj4 from "proj4";
+import axios from "axios";
 
 const { kakao } = window;
 
 const Map = () => {
-  const [xyList, setXYList] = useState([]);
+  const [xyList, setXYList] = useState({
+    x: "",
+    y: "",
+  });
+  useEffect(() => {
+    axios.get("/api").then((res) => {
+      console.log(res.data[0].x);
+      setXYList({
+        x: res.data[0].x,
+        y: res.data[0].y,
+      });
+      console.log(xyList.x);
+    });
+  }, []);
 
   // const [map, setMap] = useState(null);
 
@@ -18,6 +32,7 @@ const Map = () => {
         ▪ 동해(울릉)원점(GRS80)-falseY:60000 : EPSG:5188    // lat: 131 lng: 38
                 ▪ +proj=tmerc +lat_0=38 +lon_0=131 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_def
    */
+  /*
   const fetchAll = useCallback(async () => {
     try {
       const res = await fetch("/api");
@@ -89,6 +104,7 @@ const Map = () => {
     };
     go();
   }, [fetchAll]);
+  */
 
   return (
     <div
