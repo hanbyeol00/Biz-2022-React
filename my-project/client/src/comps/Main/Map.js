@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import proj4 from "proj4";
 
-const { kakao } = window;
+// const { kakao } = window;
 
 const Map = () => {
   const [xyList, setXYList] = useState([]);
@@ -28,18 +28,6 @@ const Map = () => {
                 ▪ +proj=tmerc +lat_0=38 +lon_0=131 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_def
    */
   const fetchAll = useCallback(async () => {
-    fetch("/api")
-      .then((res) => {
-        if (res.status < 200) throw new Error("GateWay Time out");
-        return res.json();
-      })
-      .then((result) => {
-        setXYList([...result]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    /*
     let res, result;
     try {
       res = await fetch("/api");
@@ -56,17 +44,16 @@ const Map = () => {
         setXYList([]);
         return alert(result.error);
       } else {
-        setXYList([...result]);
+        setXYList(result);
       }
       console.log("xyList   :  ", xyList);
     } catch (err) {
       console.log(err);
-      setXYList([]);
+      // setXYList([]);
       return alert("setState 오류");
     }
     console.log("fetch    ", xyList);
-    */
-  }, []);
+  }, [xyList]);
 
   const makeMap = useCallback(async () => {
     console.log("make");
@@ -82,16 +69,16 @@ const Map = () => {
         Number(xyList[0].y),
       ]);
       // console.log(p);
-      const options = {
-        center: new kakao.maps.LatLng(p[1], p[0]),
-      }; // 36.559999659417194, 128.7201938188227),
+      // const options = {
+      //   center: new kakao.maps.LatLng(p[1], p[0]),
+      // }; // 36.559999659417194, 128.7201938188227),
 
-      const kakaoMap = new kakao.maps.Map(container, options);
-      let markerPosition = new kakao.maps.LatLng(p[1], p[0]);
-      let marker = new kakao.maps.Marker({
-        position: markerPosition,
-      });
-      marker.setMap(kakaoMap);
+      // const kakaoMap = new kakao.maps.Map(container, options);
+      // let markerPosition = new kakao.maps.LatLng(p[1], p[0]);
+      // let marker = new kakao.maps.Marker({
+      //   position: markerPosition,
+      // });
+      // marker.setMap(kakaoMap);
     }
   }, [xyList]);
 
@@ -104,7 +91,7 @@ const Map = () => {
     const go = async () => {
       await fetchAll();
       // console.log("fetchAll", xyList);
-      await makeMap();
+      // await makeMap();
     };
     go();
   }; // , [makeMap]);
