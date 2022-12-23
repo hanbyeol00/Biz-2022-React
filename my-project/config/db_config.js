@@ -1,9 +1,9 @@
 export default {
   development: {
     username: "root",
-    password: "!Biz8080",
-    database: "testdb",
-    host: "127.0.0.1",
+    password: "!Korea8085",
+    database: "todo",
+    host: "192.168.0.220",
     dialect: "mysql",
     logging: true,
   },
