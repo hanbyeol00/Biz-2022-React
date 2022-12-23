@@ -5,7 +5,7 @@ const Popular = () => {
   return (
     <>
       <h3 className="popular">인기글</h3>
-      <table>
+      <table className="popular">
         <thead>
           <tr>
             <th>게시판</th>

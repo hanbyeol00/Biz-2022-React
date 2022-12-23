@@ -7,10 +7,10 @@ router.get("/", async (req, res) => {
   try {
     const test = await Test.findAll();
     console.log(test);
-    return res.json(test);
+    // return res.json(test);
   } catch (er) {
     console.log(er);
-    return res.json({ error: "ERR" });
+    // return res.json({ error: "ERR" });
   }
 });
 

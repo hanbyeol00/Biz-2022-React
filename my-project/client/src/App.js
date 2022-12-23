@@ -2,8 +2,10 @@ import "./css/App.css";
 import "./css/Main.css";
 import MainPage from "./comps/MainPage";
 import Layout from "./comps/Main/Layout";
+import { useState } from "react";
 import Footer from "./comps/Footer";
 import Map from "./comps/Main/Map";
+import MainView from "./comps/community/MainView";
 
 function App() {
   // const callApi = async () => {
@@ -18,8 +20,9 @@ function App() {
     <div className="App">
       <Layout />
       <section className="mainPage">
-        <MainPage />
+        {/* <MainPage /> */}
         <Map />
+        <MainView />
       </section>
       <Footer />
     </div>

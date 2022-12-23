@@ -56,7 +56,6 @@ const TodoContextProvider = ({ children }) => {
     try {
       const res = await fetch("/todo");
       const result = await res.json();
-      console.log(result);
       if (result.error) {
         alert(result.error);
         setTodoContentList([]);

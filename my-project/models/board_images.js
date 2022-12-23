@@ -1,28 +1,29 @@
 import Sequelize from "sequelize";
 export default (sequelize) => {
   return sequelize.define(
-    "xyTable",
+    "board_images",
     {
-      x: {
-        type: Sequelize.DataTypes.STRING(50),
-        allowNull: true,
+      i_seq: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
         primaryKey: true,
       },
-      y: {
-        type: Sequelize.DataTypes.STRING(50),
-        allowNull: true,
+      i_img: {
+        type: Sequelize.DataTypes.STRING(255),
+        allowNull: false,
+        primaryKey: true,
       },
     },
     {
       sequelize,
-      tableName: "xyTable",
+      tableName: "board_images",
       timestamps: false,
       indexes: [
         {
           name: "PRIMARY",
           unique: true,
           using: "BTREE",
-          fields: [{ name: "x" }],
+          fields: [{ name: "i_seq" }, { name: "i_img" }],
         },
       ],
     }

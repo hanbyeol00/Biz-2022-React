@@ -26,7 +26,7 @@ import mapRouter from "../routes/mapAPI.js";
 // create express framework
 const app = express();
 
-DB.sequelize.sync({ force: false }).then((dbConn) => {
+DB.sequelize.sync({ force: true }).then((dbConn) => {
   console.log(dbConn.options.host, dbConn.config.database, "DB Connection OK");
 });
 
