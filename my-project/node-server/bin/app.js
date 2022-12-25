@@ -22,11 +22,12 @@ import DB from "../models/index.js";
 import indexRouter from "../routes/index.js";
 import usersRouter from "../routes/users.js";
 import mapRouter from "../routes/mapAPI.js";
+import boardRouter from "../routes/board.js";
 
 // create express framework
 const app = express();
 
-DB.sequelize.sync({ force: true }).then((dbConn) => {
+DB.sequelize.sync({ force: false }).then((dbConn) => {
   console.log(dbConn.options.host, dbConn.config.database, "DB Connection OK");
 });
 
@@ -48,6 +49,7 @@ app.use(express.static(path.join("public")));
 app.use("/", indexRouter);
 app.use("/api", mapRouter);
 app.use("/users", usersRouter);
+app.use("/board", boardRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

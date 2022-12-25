@@ -21,7 +21,7 @@ const normalizePort = (val) => {
   return false;
 };
 
-const debug = createDebug("my-project:server");
+const debug = createDebug("server:server");
 const port = normalizePort(process.env.PORT || "5000");
 
 /**

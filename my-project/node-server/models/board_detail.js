@@ -9,6 +9,10 @@ export default (sequelize) => {
         allowNull: false,
         primaryKey: true,
       },
+      b_category: {
+        type: Sequelize.DataTypes.STRING(50),
+        allowNull: false,
+      },
       b_nickname: {
         type: Sequelize.DataTypes.STRING(20),
         allowNull: true,
