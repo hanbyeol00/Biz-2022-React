@@ -26,6 +26,7 @@ router.get("/", async (req, res) => {
     return res.json({ error: "ERR" });
   }
 });
+
 router.post("/list", async (req, res) => {
   const add = req.body.add;
   let page = req.body.page;
@@ -48,6 +49,7 @@ router.post("/list", async (req, res) => {
     return res.json({ error: "ERR" });
   }
 });
+
 router.post("/list/length", async (req, res) => {
   const add = req.body.add;
   try {
@@ -64,7 +66,6 @@ router.post("/list/length", async (req, res) => {
 
 router.post("/xyData", async (req, res) => {
   const id = req.body.id;
-  console.log(id);
   try {
     const data = await Test.findByPk(id);
     res.json(data);
