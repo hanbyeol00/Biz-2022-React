@@ -31,7 +31,7 @@ const Write = () => {
           placeholder="제목을 입력해주세요"
         />
         <select defaultValue={detail.b_category} onChange={onCategoryHandler}>
-          <option value="">카테고리</option>
+          <option>카테고리</option>
           <option>공지사항</option>
           <option>자유게시판</option>
           <option>유머게시판</option>

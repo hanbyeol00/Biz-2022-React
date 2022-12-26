@@ -74,13 +74,14 @@ const CommunityContextProvider = ({ children }) => {
       content: content || detail.b_content,
       Page: page,
     };
-    if (body.title == "") {
+    console.log(body.title);
+    if (!body.title) {
       return alert("제목을 입력해주세요");
     }
-    if (body.category == "" || category == "카테고리") {
+    if (!body.category || body.category == "카테고리") {
       return alert("카테고리를 정해주세요");
     }
-    if (body.content == "") {
+    if (!body.content) {
       return alert("게시글 내용을 입력해주세요");
     }
 
