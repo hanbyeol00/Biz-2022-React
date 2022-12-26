@@ -25,6 +25,7 @@ import mapRouter from "../routes/mapAPI.js";
 import boardRouter from "../routes/board.js";
 
 // create express framework
+
 const app = express();
 
 DB.sequelize.sync({ force: false }).then((dbConn) => {
