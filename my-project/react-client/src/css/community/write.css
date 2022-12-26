@@ -1,0 +1,22 @@
+.writeMain {
+  min-height: 100%;
+  width: 80%;
+  margin: auto;
+}
+.write.title {
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+  padding: 1em 0 1em 0;
+}
+.write.title input {
+  padding: 12px;
+}
+.write.content {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.write.button button {
+  padding: 12px 20px;
+  margin: 15px 15px 3.5% 15px;
+}
