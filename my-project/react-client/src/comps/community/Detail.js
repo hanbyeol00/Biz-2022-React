@@ -23,10 +23,12 @@ const Detail = () => {
   }, []);
   */
   const deleteData = (e) => {
-    const target = e.target;
-    const parent = target.closest("DIV");
-    const id = parent.dataset.id;
-    deleteItem(id);
+    if (window.confirm(`게시글을 삭제합니다`)) {
+      const target = e.target;
+      const parent = target.closest("DIV");
+      const id = parent.dataset.id;
+      deleteItem(id);
+    }
   };
 
   const updateData = (e) => {

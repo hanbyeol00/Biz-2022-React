@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 const ViewItem = ({ item }) => {
   const { detail, setDetail, setLoading, loading } = useCommunityContext();
 
-  const nav = useNavigate();
-
   return (
     <tr data-id={item.seq}>
       <td>{item.seq}</td>

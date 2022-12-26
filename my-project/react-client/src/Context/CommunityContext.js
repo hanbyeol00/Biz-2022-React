@@ -145,27 +145,45 @@ const CommunityContextProvider = ({ children }) => {
       },
       body: JSON.stringify(body),
     };
+    let lengthData = 0;
     try {
       const res = await fetch("/board/select", fetchOption);
       const result = await res.json();
       setBoardList([...result]);
+      console.log(result);
+      lengthData = result.length;
+      if (result.length == 0) {
+        console.log("123");
+        const data = [
+          {
+            seq: "",
+            b_category: "",
+            b_nickname: "",
+            b_title: "찾는 데이터가 없습니다",
+          },
+        ];
+        setBoardList([...data]);
+        setPageLength("1");
+      }
     } catch (err) {
       console.log(err);
     }
-    try {
-      const fetchOption = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      };
-      const res = await fetch(`/board/length`, fetchOption);
-      const result = await res.json();
-      setPageLength(result.length);
-      console.log(result.length);
-    } catch (err) {
-      console.log(err);
+    if (lengthData > 0) {
+      try {
+        const fetchOption = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        };
+        const res = await fetch(`/board/length`, fetchOption);
+        const result = await res.json();
+        setPageLength(result.length);
+        console.log(result.length);
+      } catch (err) {
+        console.log(err);
+      }
     }
   });
 
