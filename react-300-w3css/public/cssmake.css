@@ -13,3 +13,6 @@
   flex: 3;
   opacity: 0;
 }
+li:hover span:nth-of-type(2) {
+  opacity: 1;
+}

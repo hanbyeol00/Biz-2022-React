@@ -30,12 +30,13 @@ const TodoItem = (props) => {
   const CompleteClickHandler = () => {
     props.todoComplete(props.id);
   };
+  const compStyle = {
+    textDecoration: props.complete ? "line-through" : "none",
+    color: props.complete ? "#777" : "blue",
+  };
   return (
     <ItemView>
-      <ContentBox
-        style={props.complete ? { "text-decoration": "line-through" } : ""}
-        onClick={CompleteClickHandler}
-      >
+      <ContentBox style={compStyle} onClick={CompleteClickHandler}>
         {props.item}
       </ContentBox>
       <DeleteBtn onClick={deleteClickHandler}>&times;</DeleteBtn>
