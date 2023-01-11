@@ -1,0 +1,15 @@
+.div {
+  width: 200px;
+  margin: 0 auto;
+  border: 1px solid #aaa;
+}
+
+.li {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+}
+.span {
+  flex: 3;
+  opacity: 0;
+}
