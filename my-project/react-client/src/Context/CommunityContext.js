@@ -20,6 +20,7 @@ const CommunityContextProvider = ({ children }) => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [boardList, setBoardList] = useState([]);
+  const [commentList, setCommentList] = useState([]);
   const [page, setPage] = useState(1);
   const [pageLength, setPageLength] = useState();
   const [detail, setDetail] = useState({});

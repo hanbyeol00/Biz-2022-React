@@ -136,7 +136,7 @@ router.post("/select", async (req, res) => {
     });
     return res.json(List);
   }
-  const boardSql = `SELECT * FROM board_detail where ${select} like '%${input}%' limit ${limit} offset ${offset}`;
+  const boardSql = `SELECT * FROM board_detail  where ${select} like '%${input}%' order by seq DESC limit ${limit} offset ${offset}`;
   const boardsList = await Board.sequelize.query(boardSql, {
     type: QueryTypes.SELECT,
   });

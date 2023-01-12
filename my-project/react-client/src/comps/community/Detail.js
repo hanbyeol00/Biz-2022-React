@@ -74,6 +74,11 @@ const Detail = () => {
           삭제
         </button>
       </div>
+      <div className="comment">
+        <div className="commentTitle">댓글</div>
+        <input placeholder="댓글을 입력해주세요" />
+        <button>작성</button>
+      </div>
     </div>
   );
 };

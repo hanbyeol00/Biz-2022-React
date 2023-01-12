@@ -38,12 +38,7 @@ const Write = () => {
         </select>
       </div>
       <div className="write content">
-        <textarea
-          defaultValue={detail.b_content}
-          onChange={onContentHandler}
-          cols="100"
-          rows="30"
-        />
+        <textarea defaultValue={detail.b_content} onChange={onContentHandler} />
       </div>
       <div className="write button" data-id={detail.seq}>
         <button onClick={navCreateHandler}>취소</button>
