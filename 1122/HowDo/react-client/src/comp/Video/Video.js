@@ -1,20 +1,13 @@
 import ReactPlayer from "react-player";
 
-const Video = ({ playList, index }) => {
+const Video = ({ playList, index, video }) => {
   return (
     <>
       <h2>Player Test</h2>
-      <div className="player-wrapper">
+      <div className="inline-block items-center">
         <ReactPlayer
           className="react-player"
-          url={[
-            "https://www.youtube.com/watch?v=oUFJJNQGwhk",
-            "https://www.youtube.com/watch?v=jNgP6d9HraI",
-            "https://www.youtube.com/watch?v=sm1DrK22Chg",
-            "https://www.youtube.com/watch?v=NXOHRi3wf8s",
-            "https://youtu.be/fNpTIbsagpw",
-            "https://www.youtube.com/watch?v=FWZoL39oFlQ",
-          ]} // 플레이어 url
+          url={video} // 플레이어 url
           width="500px" // 플레이어 크기 (가로)
           height="630px" // 플레이어 크기 (세로)
           playing={true} // 자동 재생 on

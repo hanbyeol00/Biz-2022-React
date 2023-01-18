@@ -1,24 +1,18 @@
+import { useBookContext } from "../../context/BookContextProvider";
+import BookItem from "./BookItem";
+const BookListView = (props) => {
+  const { bookList } = props;
+  console.log(bookList);
+  return bookList[0]?.map((book) => {
+    return <BookItem book={book} key={book.isbn} />;
+  });
+};
 const BookList = () => {
+  const context = useBookContext();
   return (
-    <div className="w3-container w3-margin">
-      <ui>
-        <li>
-          <span>자바야 놀자</span>
-          <span>홍길동</span>
-          <span>광주출판</span>
-        </li>
-        <li>
-          <span>자바야 놀자</span>
-          <span>홍길동</span>
-          <span>광주출판</span>
-        </li>
-        <li>
-          <span>자바야 놀자</span>
-          <span>홍길동</span>
-          <span>광주출판</span>
-        </li>
-      </ui>
-    </div>
+    <ul className="w3-ul book">
+      <BookListView bookList={context.bookList} />
+    </ul>
   );
 };
 
