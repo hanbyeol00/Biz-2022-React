@@ -2,7 +2,7 @@ import Video from "./Video";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const VideoMain = () => {
   const video = [
@@ -13,14 +13,47 @@ const VideoMain = () => {
     "https://youtu.be/fNpTIbsagpw",
     "https://www.youtube.com/watch?v=FWZoL39oFlQ",
   ];
+  const [videoItemList, setVideoItemList] = useState([]);
+  const [videoList, setVideoList] = useState([]);
 
-  const videoView = video.map((video, index) => {
-    return <Video video={video} index={index} key={video} />;
+  useEffect(() => {
+    setVideoItemList(video);
+    const randomVideo = async () => {
+      const randomNum = Math.floor(Math.random() * videoItemList.length);
+      setVideoList([...videoList, videoItemList[randomNum]]);
+      const item = video[randomNum];
+      const videoItem = video.filter((video) => {
+        return video !== item;
+      });
+      setVideoItemList(videoItem);
+    };
+    randomVideo();
+  }, []);
+
+  const afterChangeHandler = (slide) => {
+    if (slide >= 1) {
+      const randomNum = Math.floor(Math.random() * videoItemList.length);
+      setVideoList([...videoList, videoItemList[randomNum]]);
+      const item = video[randomNum];
+      const videoItem = videoItemList.filter((video) => {
+        return video !== item;
+      });
+      setVideoItemList(videoItem);
+    }
+  };
+  console.log(videoList);
+
+  const videoView = videoList.map((video) => {
+    return <Video video={video} key={video} />;
   });
+
   return (
     <>
       <div>
-        <Slider afterChange={(slide) => console.log(slide)}>{videoView}</Slider>
+        <Slider infinite={false} afterChange={afterChangeHandler}>
+          {videoView}
+          <div />
+        </Slider>
       </div>
     </>
   );

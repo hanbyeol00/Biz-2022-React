@@ -1,6 +1,6 @@
 import ReactPlayer from "react-player";
 
-const Video = ({ playList, index, video }) => {
+const Video = ({ video }) => {
   return (
     <>
       <h2>Player Test</h2>
@@ -10,7 +10,7 @@ const Video = ({ playList, index, video }) => {
           url={video} // 플레이어 url
           width="500px" // 플레이어 크기 (가로)
           height="630px" // 플레이어 크기 (세로)
-          playing={true} // 자동 재생 on
+          playing={false} // 자동 재생 on
           muted={false} // 자동 재생 on
           controls={true} // 플레이어 컨트롤 노출 여부
           light={false} // 플레이어 모드
