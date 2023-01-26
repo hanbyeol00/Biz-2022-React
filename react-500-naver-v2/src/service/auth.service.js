@@ -28,5 +28,10 @@ const setLogin = async (loginUser) => {
   return result;
 };
 
+export const logout = async () => {
+  if (window?.confirm("로그아웃을 할까요?"))
+    return await fetch("/api/user/logout");
+};
+
 const Auth = { getLoginUser, setLogin };
 export default Auth;
