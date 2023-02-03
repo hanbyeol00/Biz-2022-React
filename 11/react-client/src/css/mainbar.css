@@ -1,0 +1,3 @@
+div.mainbar:not(.modal) {
+  position: fixed;
+}
