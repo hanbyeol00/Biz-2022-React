@@ -1,0 +1,12 @@
+.board-link {
+  display: inline-block;
+}
+
+.board-link:hover {
+  color: rgb(59, 130, 246);
+}
+
+.board-link.active {
+  color: rgb(59, 130, 246);
+  font-weight: bold;
+}

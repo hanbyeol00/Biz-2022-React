@@ -1,0 +1,116 @@
+/* font size */
+.commu-detail .content .text-tiny,
+.ck-content .text-tiny {
+  font-size: 0.7em;
+}
+
+.commu-detail .content .text-small,
+.ck-content .text-small {
+  font-size: 0.85em;
+}
+
+.commu-detail .content .text-big,
+.ck-content .text-big {
+  font-size: 1.4em;
+}
+
+.commu-detail .content .text-huge,
+.ck-content .text-huge {
+  font-size: 1.8em;
+}
+
+/* list style */
+.commu-detail .content ul li,
+.commu-detail .content ol li,
+.ck-content ul li,
+.ck-content ol li {
+  list-style-position: inside;
+}
+
+/* table style */
+.commu-detail .content .table table td,
+.commu-detail .content .table table th,
+.ck-content .table table td,
+.ck-content .table table th {
+  border: 1px solid #bfbfbf;
+  min-width: 2em;
+  padding: 0.4em;
+}
+
+.commu-detail .content .table table th,
+.ck-content .table table th {
+  background: rgba(0, 0, 0, 0.05);
+  font-weight: 700;
+}
+
+/* blockquote style : 인용구 */
+.commu-detail .content blockquote,
+.ck-content blockquote {
+  border-left: 5px solid #ccc;
+  font-style: italic;
+  margin-left: 0;
+  margin-right: 0;
+  overflow: hidden;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
+
+/* figcaption style : 이미지 하단 캡션(설명) */
+.commu-detail .content .image > figcaption {
+  background-color: var(--ck-color-image-caption-background);
+  caption-side: bottom;
+  color: var(--ck-color-image-caption-text);
+  display: table-caption;
+  font-size: 0.75em;
+  outline-offset: -1px;
+  padding: 0.6em;
+  word-break: break-word;
+}
+
+/* image position */
+.commu-detail .content .image,
+.commu-detail .content .image-inline {
+  position: relative;
+}
+
+.commu-detail .content .image {
+  clear: both;
+  display: table;
+  margin: 0.9em auto;
+  min-width: 50px;
+  text-align: center;
+}
+
+.commu-detail .content .image.image_resized img {
+  width: 100%;
+}
+
+.commu-detail .content .image-style-side {
+  float: right;
+  margin-left: var(--ck-image-style-spacing);
+  max-width: 50%;
+}
+
+.commu-detail .content .image-style-side img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  min-width: 100%;
+}
+
+/* editor height */
+.ck-content {
+  height: 70vh;
+}
+
+/* thumbnail select box */
+.thumb-select img {
+  width: 15%;
+  cursor: pointer;
+  opacity: 0.5;
+  margin: 0.5rem;
+}
+
+.thumb-select img:hover {
+  opacity: 1;
+}
