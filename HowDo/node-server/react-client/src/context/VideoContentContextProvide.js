@@ -34,6 +34,7 @@ export const VideoContentContextProvider = ({ children }) => {
   });
   const [videoDetail, setVideoDetail] = useState({});
   const [relationship, setRelationship] = useState([]);
+  const [videoTime, setVideoTime] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -90,6 +91,8 @@ export const VideoContentContextProvider = ({ children }) => {
     setRelationship,
     onClickDetailHandler,
     deleteVideo,
+    videoTime,
+    setVideoTime,
   };
 
   return (

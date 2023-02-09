@@ -12,6 +12,7 @@ const SHORTS = DB.models.shorts;
 
 router.get("/shorts", async (req, res) => {
   const result = await SHORTS.findAll({
+    where: { sh_delete_date: null },
     attributes: ["sh_src"],
   });
   res.json(result);
@@ -55,9 +56,13 @@ router.post("/upload", fileUp.single("upload"), async (req, res, next) => {
       sh_title: v_title,
     };
     await Video.create(uploadFileInfo);
-    return await SHORTS.create(shortsUploadFileInfo);
+    await SHORTS.create(shortsUploadFileInfo);
+    const result = Video.findAll();
+    return res.json(result);
   } else {
-    return await Video.create(uploadFileInfo);
+    await Video.create(uploadFileInfo);
+    const result = Video.findAll();
+    return res.json(result);
   }
 });
 
@@ -87,6 +92,13 @@ router.post("/delete", async (req, res) => {
   const { username } = videoInfo;
   if (Username === username) {
     await Video.update({ v_delete_date: date }, { where: { v_code: v_code } });
+    const shorts = await SHORTS.findOne({ where: { v_code: v_code } });
+    if (shorts) {
+      await SHORTS.update(
+        { sh_delete_date: date },
+        { where: { v_code: v_code } }
+      );
+    }
   } else {
     console.log("삭제안됨");
   }

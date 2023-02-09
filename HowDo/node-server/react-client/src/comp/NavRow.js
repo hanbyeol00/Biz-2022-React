@@ -112,7 +112,7 @@ const NavRow = () => {
             {userSession.nickname} 님의 페이지
           </div>
         ) : (
-          <Link to="/regist" className={navRow}>
+          <Link to="/user" className={navRow}>
             회원가입
           </Link>
         )}

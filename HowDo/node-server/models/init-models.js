@@ -127,7 +127,7 @@ const initModels = (sequelize) => {
   user.hasMany(video, { foreignKey: "username" });
   video.belongsTo(user, { foreignKey: "username" });
 
-  video.hasMany(shorts, { foreignKey: "v_code" });
+  video.hasMany(shorts, { as: "VIDEO_SHORTS", foreignKey: "v_code" });
   shorts.belongsTo(video, { foreignKey: "v_code" });
 
   return {

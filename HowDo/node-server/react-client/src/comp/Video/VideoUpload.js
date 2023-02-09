@@ -1,10 +1,19 @@
 import axios from "axios";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
+import ReactPlayer from "react-player";
 
 const VideoUpload = (props) => {
   const formData = new FormData();
-  const { setDetail, detail, file, setFile, shorts, setShorts } =
-    useVideoContentContext();
+  const {
+    setDetail,
+    detail,
+    file,
+    setFile,
+    shorts,
+    setShorts,
+    videoTime,
+    setVideoTime,
+  } = useVideoContentContext();
   const { open, close } = props;
 
   const videoUpload = (e) => {
@@ -18,6 +27,10 @@ const VideoUpload = (props) => {
       video: videoType,
       v_save_file: filename,
     });
+  };
+
+  const onDurationHandler = (e) => {
+    setVideoTime(e);
   };
 
   const titleOnChangeHandler = (e) => {
@@ -38,7 +51,11 @@ const VideoUpload = (props) => {
 
   const shortsOnChangeHandler = (e) => {
     const name = e.target.className;
-    setShorts({ ...shorts, [name]: !shorts[name] });
+    if (detail.video && videoTime < 60) {
+      setShorts({ ...shorts, [name]: !shorts[name] });
+    } else {
+      e.target.readonly = true;
+    }
   };
 
   const onClickHandler = async () => {
@@ -100,12 +117,12 @@ const VideoUpload = (props) => {
         <div className="modal bg-white rounded-md text-center">
           <div className="modal h-56 mt-10">
             {detail.video === true ? (
-              <video
+              <ReactPlayer
                 className="m-auto pt-10"
-                src={detail.url}
-                controls
+                url={detail.url}
+                onDuration={onDurationHandler}
                 width="350px"
-                controlsList="nodownload"
+                height="250px"
               />
             ) : (
               <div className="modal h-full">
