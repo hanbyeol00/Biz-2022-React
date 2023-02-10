@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useUserContext } from "../../context/UserContextProvider";
 import { fetchJoin } from "../../service/auth.service";
 const Join = () => {
@@ -25,11 +26,23 @@ const Join = () => {
     }
     console.log(result);
   };
+  useEffect(() => {
+    const item = async () => {
+      const result = await fetchJoin(joinUser);
+      if (result.CODE) {
+        setError({ ...result });
+      }
+      if (result === joinUser.username) {
+        document.location.href = "/";
+        alert("회원가입이 완료되었습니다");
+      }
+      console.log(result);
+    };
+    item();
+  }, [joinUser]);
 
   const twoEvent = async (e) => {
     await onChangeHandler(e);
-    await new Promise((r) => setTimeout(r, 200));
-    await onClickHandler(e);
   };
 
   const submitHandler = (e) => {

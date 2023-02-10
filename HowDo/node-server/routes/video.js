@@ -80,7 +80,9 @@ router.get("/detail/:v_code", async (req, res) => {
   }
   if (result.v_category) {
     const { v_category } = result;
-    category = await Video.findAll({ where: { v_category: v_category } });
+    category = await Video.findAll({
+      where: { v_category: v_category, v_delete_date: null },
+    });
   }
   return res.json({ video: result, category });
 });
