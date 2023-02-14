@@ -13,10 +13,10 @@ import {
   upvotePost,
   deletePost,
 } from "../../service/post.service";
-import { usePostContext } from "../../context/PostContextProvider";
 import { useUserContext } from "../../context/UserContextProvider";
 import { useLoaderData, useParams, useNavigate, Link } from "react-router-dom";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { usePostContext } from "../../context/PostContextProvider";
 
 // html tag -> entity -> tag 로 변환하는 과정 필요
 // 자기 자신을 참조하도록 테이블 관계 설정
@@ -34,13 +34,15 @@ export const loader = async ({ params }) => {
 };
 
 const PostDetail = () => {
+  const { detail, reply } = useLoaderData();
   const { userSession } = useUserContext();
-
+  const { replyCount, setReplyCount } = usePostContext();
   const nav = useNavigate();
   const bEng = useParams().board;
-  const { detail, reply } = useLoaderData();
-  const { replyCount, setReplyCount } = usePostContext();
   const [upvotes, setUpvotes] = useState();
+
+  console.log(reply);
+
   let board = detail?.board;
   let post = detail?.post;
   let list = reply?.list;
@@ -97,7 +99,6 @@ const PostDetail = () => {
           {post?.p_title}
         </div>
         <EyeIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
-        {/* 게시글 열람하면 조회수가 그대로인데 새로고침, 뒤로가기 하면 올라가는 이유?.. */}
         <span className="mr-4">{post?.p_views}</span>
         <HandThumbUpIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
         <span className="mr-4">{upvotes}</span>
@@ -116,7 +117,6 @@ const PostDetail = () => {
           <UserCircleIcon className={imgDefault} />
         )}
         <span className="nickname pl-2">{post?.user["nickname"]}</span>
-
         <span className="float-right">{`${post?.p_date} ${post?.p_time}`}</span>
       </section>
 
@@ -138,8 +138,8 @@ const PostDetail = () => {
         <section className="button-box flex justify-end w-full">
           <Link
             className={`${btnClass01} mr-4`}
-            to={`/community/${board?.b_eng}/write/${post?.p_code}`}
-            state={{ data: post, b_eng: board?.b_eng }}
+            to={`/community/write/${post?.p_code}`}
+            state={{ data: post, b_eng: board?.b_eng, b_kor: board?.b_kor }}
           >
             수정
           </Link>
@@ -149,7 +149,11 @@ const PostDetail = () => {
         </section>
       )}
 
-      <Reply code={post?.p_code} list={list} count={replyCount} />
+      <Reply
+        writer={post?.user["nickname"]}
+        p_code={post?.p_code}
+        list={list}
+      />
     </main>
   );
 };

@@ -5,11 +5,12 @@ import fs from "fs";
 import path from "path";
 import { v4 } from "uuid";
 
-const upload_dir = path.join("public/uploads");
+const upload_dir = path.join("react-client/public/uploads");
 
 const storageOption = {
   filename: (req, file, cb) => {
     const uuidPrefix = v4();
+    console.log(file.originalname);
     const newFileName = Buffer.from(
       `${uuidPrefix}-${file.originalname}`,
       "latin1"

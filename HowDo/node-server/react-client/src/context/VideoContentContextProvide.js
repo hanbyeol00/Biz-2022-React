@@ -30,11 +30,15 @@ export const VideoContentContextProvider = ({ children }) => {
     v_price: 0,
     v_detail: "",
     v_category: "",
-    v_save_file: "",
   });
   const [videoDetail, setVideoDetail] = useState({});
   const [relationship, setRelationship] = useState([]);
   const [videoTime, setVideoTime] = useState(0);
+  const [openModel, setOpenModel] = useState({
+    video: false,
+  });
+  const [replyList, setReplyList] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     (async () => {
@@ -82,7 +86,6 @@ export const VideoContentContextProvider = ({ children }) => {
     setDetail,
     shorts,
     setShorts,
-
     loading,
     setLoading,
     videoDetail,
@@ -93,6 +96,12 @@ export const VideoContentContextProvider = ({ children }) => {
     deleteVideo,
     videoTime,
     setVideoTime,
+    openModel,
+    setOpenModel,
+    replyList,
+    setReplyList,
+    page,
+    setPage,
   };
 
   return (

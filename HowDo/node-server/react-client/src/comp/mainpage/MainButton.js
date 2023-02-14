@@ -2,14 +2,16 @@ import { useTransferContext } from "../../context/TransferContextProvider";
 import { button } from "../../nav/classNames/ClassNames";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
 import { useNavigate } from "react-router-dom";
-
 const MainButton = () => {
   const navigate = useNavigate();
   const context = useTransferContext();
-  const { setVideoItemList } = useVideoContentContext();
+  const { setVideoItemList, page, setPage } = useVideoContentContext();
 
   const item = async () => {
-    const res = await fetch("/video/main");
+    await setPage(1);
+    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 100));
+    const res = await fetch(`/video/main/${page}`);
     const result = await res.json();
     let tempArray = [...result];
     tempArray.sort(() => Math.random() - 0.5);

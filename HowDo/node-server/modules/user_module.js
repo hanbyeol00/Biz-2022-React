@@ -67,15 +67,15 @@ export const chkJoin = async (info) => {
   }
 
   // 인서트하기
-  // if (info.name === "BUTTON") {
-  try {
-    await USER.create(info);
-    return info.username;
-  } catch (e) {
-    console.log(e.message);
-    throw new Error(JSON.stringify(USER_JOIN_RES.USER_NOT_CREATE));
+  if (info.name === "BUTTON") {
+    try {
+      await USER.create(info);
+      return info.username;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error(JSON.stringify(USER_JOIN_RES.USER_NOT_CREATE));
+    }
   }
-  // }
 };
 
 export const chkLogin = async (info) => {
@@ -104,4 +104,12 @@ export const chkLogin = async (info) => {
     throw new Error(JSON.stringify(USER_LOGIN_RES.MATCH_NOT_PASSWORD));
 
   return resultUser;
+};
+
+export const profileImageUpdate = async (id, image) => {
+  const result = await USER.update(
+    { profile_image: image },
+    { where: { username: id } }
+  );
+  return result;
 };

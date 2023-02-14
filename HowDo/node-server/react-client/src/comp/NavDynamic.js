@@ -4,12 +4,11 @@ import VideoUpload from "./Video/VideoUpload";
 import { navDyna } from "../nav/classNames/ClassNames";
 import { useUserContext } from "../context/UserContextProvider";
 import { useNavigate } from "react-router-dom";
+import { useVideoContentContext } from "../context/VideoContentContextProvide";
 const NavDynamic = ({ nOpen, setNOpen }) => {
   const nav = useNavigate();
   const { userSession } = useUserContext();
-  const [openModel, setOpenModel] = useState({
-    video: false,
-  });
+  const { openModel, setOpenModel } = useVideoContentContext();
   const ModelHandler = (name) => {
     if (userSession.username) {
       return setOpenModel({ ...openModel, [name]: !openModel[name] });

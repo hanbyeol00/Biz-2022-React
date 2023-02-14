@@ -15,8 +15,10 @@ export const SearchItem = () => {
   const itemClick = (item) => {
     navigate(`/creater/${item.nickname}`);
   };
+  // console.log(SearchR);
 
   const userSearchView = SearchR?.u_result?.map((item) => {
+    // console.log(item.profile_image);
     return (
       <div
         className={searchItemwrap}
@@ -53,11 +55,11 @@ export const SearchItem = () => {
     <div className="flex flex-col ml-40 w-full">
       <span className={nameSpan}>사용자 검색 공간입니다</span>
       <div className={wrapperDiv}>
-        {userSearchView[0] ? userSearchView : searchNull}
+        {userSearchView.length > 0 ? userSearchView : searchNull}
       </div>
       <span className={nameSpan}>컨텐츠 검색 공간입니다</span>
       <div className={wrapperDiv}>
-        {videoSearchView[0] ? videoSearchView : searchNull}
+        {videoSearchView.length > 0 ? videoSearchView : searchNull}
       </div>
       <span className={nameSpan}>게시글 검색 공간입니다</span>
       <div className={wrapperDiv}>{searchNull}</div>

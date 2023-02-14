@@ -56,9 +56,13 @@ const router = createBrowserRouter([
             loader: DetailLoader,
             element: <PostDetail />,
           },
-          { path: ":board/write/:post?", element: <PostWrite /> },
+          {
+            path: "write/:post?",
+            element: <PostWrite />,
+          },
         ],
       },
+
       { path: "/approval", element: <Approve /> },
       { path: "/search/:query", loader: SearchLoader, element: <SearchMain /> },
       { path: "/video/shorts", element: <ShortMain /> },

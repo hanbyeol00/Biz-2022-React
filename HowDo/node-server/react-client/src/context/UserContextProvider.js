@@ -21,6 +21,7 @@ export const UserContextProvider = ({ children }) => {
   const [modal, setModal] = useState({
     open: false,
   });
+  const [cancel, setCancel] = useState({ open: false });
 
   const usernameRef = useRef();
   const nicknameRef = useRef();
@@ -41,8 +42,11 @@ export const UserContextProvider = ({ children }) => {
   // 모달창 열고 닫는 함수
   const modalHandler = () => {
     setModal({ ...modal, open: !modal.open });
-    // document.location.href = "/";
     console.log(userSession);
+  };
+
+  const cancelHandler = () => {
+    setCancel({ ...cancel, open: !cancel.open });
   };
 
   const logoutHandler = (e) => {
@@ -83,6 +87,9 @@ export const UserContextProvider = ({ children }) => {
     modal,
     setModal,
     modalHandler,
+    cancel,
+    setCancel,
+    cancelHandler,
 
     creater,
     setCreater,

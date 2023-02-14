@@ -1,3 +1,14 @@
+export const groupBoardList = (data) => {
+  return data.reduce((acc, obj) => {
+    let key = obj["b_group_kor"];
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(obj);
+    return acc;
+  }, {});
+};
+
 export const getBoardList = async () => {
   try {
     const response = await fetch("/community/boards/get");
@@ -118,10 +129,13 @@ export const getReply = async (pCode) => {
   try {
     const response = await fetch(`/community/reply/${pCode}/get`);
     const result = await response.json();
+    console.log(result);
+    const replies = await result.replyCount;
     const data = {
       list: result.replyList,
-      count: result.replyCount.p_replies,
+      count: replies,
     };
+    console.log(data);
     return data;
   } catch (err) {
     return null;
@@ -147,10 +161,10 @@ export const insertReply = async (data) => {
   }
 };
 
-export const deleteReply = async (rCode, pCode) => {
+export const deleteReply = async (rCode) => {
   if (window.confirm("이 댓글을 삭제할까요?"))
     try {
-      const response = await fetch(`/community/reply/${rCode}/${pCode}/delete`);
+      const response = await fetch(`/community/reply/${rCode}/delete`);
       const result = await response.json();
       if (result.ERROR) {
         alert(result.ERROR);

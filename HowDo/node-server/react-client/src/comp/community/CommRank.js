@@ -6,8 +6,6 @@ import {
 import { Link } from "react-router-dom";
 
 const CommRank = ({ data }) => {
-  console.log(data);
-
   const Rank = () => {
     return data.map((item) => {
       return (
@@ -25,7 +23,14 @@ const CommRank = ({ data }) => {
             <ChatBubbleOvalLeftEllipsisIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
             <span>{item.p_replies}</span>
           </div>
-          <div className="w-full h-44 bg-black col-span-2"></div>
+          <div
+            className="w-full h-44 col-span-2 bg-center bg-no-repeat bg-cover"
+            style={{
+              backgroundImage: item.p_thumb
+                ? `url(http://localhost:3000/public/uploads/${item.p_thumb})`
+                : `url(/image/noimage.png)`,
+            }}
+          ></div>
           <div className="text-left font-bold p-2">{item.p_title}</div>
           <div className="text-left text-sm pl-2">{item["user.nickname"]}</div>
         </Link>

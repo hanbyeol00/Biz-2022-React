@@ -3,10 +3,10 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { usePayContext } from "../../context/PayContextProvider";
 import { payReady } from "../../service/auth.service";
 
-const Purchase = () => {
-  const { modal, modalHandler, userSession } = useUserContext();
+const Purchase = (props) => {
+  const { modal, modalHandler } = useUserContext();
   const { statePayReady } = usePayContext();
-
+  const { nickname, price } = props;
   return (
     <div>
       <div
@@ -37,13 +37,13 @@ const Purchase = () => {
               src="https://yt3.ggpht.com/Uk6ujyzSetiuHYpEaEPzscAjGx_a4Vd2j3zQ-z_ciFySagb23eiD2-YzRxr18xK1bMedCNhxEg=s256-c-k-c0x00ffffff-no-rj"
             />
             <div>
-              <h1 className="text-2xl m-2">{userSession.nickname}</h1>
+              <h1 className="text-2xl m-2">{nickname}</h1>
               <p>구독혜택 이용해보기</p>
             </div>
           </div>
           <div>
             <div className="flex items-center justify-end m-4">
-              <h2>₩{userSession.price}/월</h2>
+              <h2>₩{price}/월</h2>
               <button
                 className="p-2 ml-5 rounded-full text-white bg-sky-600 hover:bg-sky-700"
                 onClick={() => {

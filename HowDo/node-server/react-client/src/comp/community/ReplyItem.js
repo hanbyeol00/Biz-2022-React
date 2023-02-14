@@ -2,14 +2,16 @@ import { useState } from "react";
 import { getReply, insertReply, deleteReply } from "../../service/post.service";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
-import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
-const ReplyItem = ({ item, index }) => {
+const ReplyItem = ({ writer, item, index }) => {
+  console.log(writer);
   const { userSession } = useUserContext();
-  const { setReplyList, setReplyCount, initReply, cReplyData, setCReplyData } =
-    usePostContext();
-  const [inputValues, setInputValues] = useState([]);
+  const { initReply, setReplyList, setReplyCount } = usePostContext();
   const [showChild, setShowChild] = useState(false);
+  const [inputValues, setInputValues] = useState([]);
+  const [cReplyInput, setCReplyInput] = useState(initReply);
+  const [cReplyCount, setCReplyCount] = useState(item.r_children);
 
   const btnClass02 =
     "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded";
@@ -31,122 +33,177 @@ const ReplyItem = ({ item, index }) => {
     // cf) function updater
     // setState 내에서 callback 실행
     // 매개변수는 현재 state 값, callback 에서 return 되는 값은 state 에 저장될 값
-    // 현재 값에 바로 setting 한 뒤 fetch 함수를 호출했다.
-    setCReplyData(async (reply) => {
+    // 저장할 값을 변수로 선언하고 fetch 함수를 호출했다.
+    setCReplyInput(async (reply) => {
       reply = {
-        ...cReplyData,
+        ...cReplyInput,
         username: userSession.username,
         p_code: item.p_code,
+        v_code: item.v_code,
         r_content: inputValues[index],
         r_parent_code: item.r_code,
       };
       await insertReply(reply);
-      let data = await getReply(reply.p_code);
+      let data = await getReply(
+        reply.p_code == null ? reply.v_code : reply.p_code
+      );
       if (data) {
         setReplyList([...data.list]);
         setReplyCount(data.count);
-        setCReplyData(initReply);
+        setInputValues([]);
       }
-      return reply;
+      return initReply;
     });
   };
 
   const onClickDelete = async () => {
-    await deleteReply(item.r_code, item.p_code);
-    let data = await getReply(item.p_code);
+    await deleteReply(item.r_code);
+    const data = await getReply(
+      item.p_code == null ? item.v_code : item.p_code
+    );
     if (data) {
       setReplyList([...data.list]);
       setReplyCount(data.count);
     }
   };
 
-  const ShowChildReply = () => {
+  const ShowChildReply = async () => {
     setShowChild(!showChild);
   };
 
+  // cf) anchor 와 id 의 hash(#) 를 이용해 scroll 위치 이동...
+  // 만약 상단 nav 밑으로 요소가 가려질 경우 css 로 해결한다.
+  // 부모 요소에 scroll-snap-type 을 주고
+  // id 가 있는 해당 요소에 scroll-margin-top 을 줄 것
+  // 일반적인 스크롤에 영향을 주지 않는다.
   return (
-    <li className="list-none w-full p-5 border-b border-gray-200 first:border-t">
-      <div className="flex">
-        {item?.user?.profile_image ? (
-          <img
-            className="inline-block mr-3 w-10 h-10"
-            src={item["user.profile_image"]}
-            alt="profile"
-          />
-        ) : (
-          <UserCircleIcon className={imgDefault} />
-        )}
-        <span className="flex items-center flex-1 ml-3">
-          {item?.user["nickname"]}
-        </span>
-        <span>{`${item.r_date} ${item.r_time}`}</span>
-      </div>
-      <div className="pt-5 pb-5">{item.r_content || "삭제된 댓글입니다."}</div>
-
-      {userSession?.username === item?.username && (
-        <div className="w-full flex justify-end">
-          <button className="hover:text-blue-700" onClick={onClickDelete}>
-            삭제
-          </button>
-        </div>
-      )}
-
-      <button className="hover:text-blue-700" onClick={ShowChildReply}>
-        {item.r_count
-          ? `${item.r_count} 개의 댓글`
-          : userSession?.username
-          ? "댓글 입력"
-          : ""}
-      </button>
-
-      <section
-        style={{
-          display: showChild === true ? "block" : "none",
-        }}
-      >
-        {item?.reply_child?.map((child, index) => {
-          <ReplyItem item={child} index={index} />;
-        })}
-
+    <section className="flex w-full border-gray-200 border-t first:border-t-0 snap-mandatory">
+      <ChevronRightIcon
+        className="ml-10 mt-7 w-6 h-6 text-slate-500"
+        style={{ display: item.r_parent_code ? "inline-block" : "none" }}
+      />
+      <div className="w-full">
         <div
-          className="reply-input-box gap-3 w-full mt-5"
+          className="w-full p-5 scroll-mt-16"
+          id={item?.r_code}
           style={{
-            display: userSession?.username && item.r_content ? "flex" : "none",
+            backgroundColor:
+              window?.location?.hash === `#${item?.r_code}` && "#EFE7DB",
           }}
         >
-          {userSession?.profile_image ? (
-            <img
-              className="rounded-full flex items-center w-10 h-10"
-              src={userSession?.profile_image}
-              alt="profile"
-            />
-          ) : (
-            <UserCircleIcon className={imgDefault} />
+          <div className="flex">
+            {item?.user?.profile_image ? (
+              <img
+                className="inline-block mr-3 w-10 h-10"
+                src={item?.profile_image}
+                alt="profile"
+              />
+            ) : (
+              <UserCircleIcon className={imgDefault} />
+            )}
+            <div className="flex items-center flex-1 ml-3">
+              <span>{item?.nickname}</span>
+              <span
+                className="ml-3 p-1 text-xs text-slate-500 border border-slate-500 rounded-lg"
+                style={{
+                  display: item?.nickname === writer ? "inline-block" : "none",
+                }}
+              >
+                {"작성자"}
+              </span>
+            </div>
+            <span>{`${item?.r_date} ${item?.r_time}`}</span>
+          </div>
+          <div className="pt-5 pb-5">
+            {item?.r_content || "삭제된 댓글입니다."}
+          </div>
+
+          {userSession?.username === item?.username && (
+            <div className="w-full flex justify-end">
+              <button className="hover:text-blue-700" onClick={onClickDelete}>
+                삭제
+              </button>
+            </div>
           )}
-          <div className="flex items-center">{userSession?.nickname}</div>
-          <input
-            onChange={(event) => onChangeCReply(event, index)}
-            className={inputClass}
-            value={inputValues[index] || ""}
-            placeholder={
-              !userSession?.username
-                ? "로그인 후 이용해주세요."
-                : "댓글을 입력하세요."
-            }
-            disabled={!userSession?.username ? true : false}
-          />
-          <button
-            className={btnClass02}
-            disabled={
-              !userSession?.username || inputValues[index] < 1 ? true : false
-            }
-            onClick={() => onClickCReply(index)}
+
+          <div className="px-3">
+            <span
+              className="mr-5 text-slate-500"
+              style={{ display: cReplyCount ? "inline-block" : "none" }}
+            >
+              {cReplyCount && `${cReplyCount} 개의 댓글`}
+            </span>
+            <button
+              className={`hover:text-blue-700 ${
+                showChild ? "text-blue-700" : ""
+              }`}
+              style={{
+                display: userSession?.username ? "inline-block" : "none",
+              }}
+              onClick={() => ShowChildReply(item.r_code)}
+              disabled={!userSession?.username ? true : false}
+            >
+              {userSession?.username && "댓글 쓰기"}
+            </button>
+          </div>
+
+          <div
+            style={{
+              display: showChild === true ? "block" : "none",
+            }}
           >
-            등록
-          </button>
+            <div
+              className="reply-input-box gap-3 w-full p-5 my-5 border border-gray-300 rounded"
+              style={{
+                display:
+                  userSession?.username && item.r_content ? "flex" : "none",
+              }}
+            >
+              {userSession?.profile_image ? (
+                <img
+                  className="rounded-full flex items-center w-10 h-10"
+                  src={userSession?.profile_image}
+                  alt="profile"
+                />
+              ) : (
+                <UserCircleIcon className={imgDefault} />
+              )}
+              <div className="flex items-center">{userSession?.nickname}</div>
+              <input
+                onChange={(event) => onChangeCReply(event, index)}
+                className={inputClass}
+                value={inputValues[index] || ""}
+                placeholder={
+                  !userSession?.username
+                    ? "로그인 후 이용해주세요."
+                    : "댓글을 입력하세요."
+                }
+                disabled={!userSession?.username ? true : false}
+              />
+              <button
+                className={btnClass02}
+                disabled={
+                  !userSession?.username || inputValues[index] < 1
+                    ? true
+                    : false
+                }
+                onClick={() => onClickCReply(index)}
+              >
+                등록
+              </button>
+            </div>
+          </div>
         </div>
-      </section>
-    </li>
+        {item?.reply_child?.map((child, index) => (
+          <ReplyItem
+            key={child.r_code}
+            writer={writer}
+            item={child}
+            index={index}
+          />
+        ))}
+      </div>
+    </section>
   );
 };
 

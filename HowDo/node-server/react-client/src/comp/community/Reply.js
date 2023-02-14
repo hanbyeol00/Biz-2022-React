@@ -1,40 +1,30 @@
 import ReplyList from "./ReplyList";
-import { useLayoutEffect } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
 import { insertReply, getReply } from "../../service/post.service";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 
-const Reply = ({ code, list, count }) => {
+const Reply = ({ writer, p_code = null, v_code = null, list }) => {
   const { userSession } = useUserContext();
-  const {
-    replyData,
-    setReplyData,
-    initReply,
-    replyList,
-    setReplyList,
-    replyCount,
-    setReplyCount,
-  } = usePostContext();
+  const { initReply, replyList, setReplyList, replyCount, setReplyCount } =
+    usePostContext();
+  const [replyInput, setReplyInput] = useState(initReply);
 
-  useLayoutEffect(() => {
-    (async () => {
-      setReplyList([...list]);
-      setReplyCount(count);
-      setReplyData(initReply);
-    })();
+  useEffect(() => {
+    setReplyList([...list]);
+    setReplyInput(initReply);
+    if (!window?.location?.hash) {
+      window.scrollTo(0, 0);
+    }
   }, []);
-
-  /**
-   * Reply 를 재사용 가능한 컴포넌트로...
-   * 칼럼명을 포함한 데이터와 fetch 함수를 어떻게 해야 할까?
-   */
 
   // 댓글 입력 데이터 갱신
   const onChangeHandler = (e) => {
-    setReplyData({
-      ...replyData,
-      p_code: code,
+    setReplyInput({
+      ...replyInput,
+      p_code: p_code,
+      v_code: v_code,
       r_content: e.target.value,
       username: userSession.username,
       r_parent_code: null,
@@ -43,13 +33,16 @@ const Reply = ({ code, list, count }) => {
 
   // 댓글 등록 버튼 클릭 시 fetch 및 reRendering
   const onClickReply = async () => {
-    setReplyData(initReply);
-    await insertReply(replyData);
-    let data = await getReply(replyData.p_code);
+    setReplyInput(initReply);
+    await insertReply(replyInput);
+    let data = await getReply(
+      replyInput.p_code == null ? replyInput.v_code : replyInput.p_code
+    );
     if (data) {
+      console.log(data);
       setReplyList([...data.list]);
       setReplyCount(data.count);
-      setReplyData(initReply);
+      setReplyInput(initReply);
     }
   };
 
@@ -75,7 +68,7 @@ const Reply = ({ code, list, count }) => {
         <div className="flex items-center">{userSession?.nickname}</div>
         <input
           className={inputClass}
-          value={replyData.r_content}
+          value={replyInput.r_content}
           onChange={onChangeHandler}
           placeholder={
             !userSession?.username
@@ -87,12 +80,12 @@ const Reply = ({ code, list, count }) => {
         <button
           className={btnClass02}
           onClick={onClickReply}
-          disabled={!userSession?.username || replyData.r_content.length < 1}
+          disabled={!userSession?.username || replyInput.r_content.length < 1}
         >
           등록
         </button>
       </div>
-      <ReplyList data={replyList} />
+      <ReplyList writer={writer} data={replyList} />
     </section>
   );
 };

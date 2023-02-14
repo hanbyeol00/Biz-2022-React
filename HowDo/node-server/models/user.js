@@ -42,7 +42,7 @@ export default (sequelize) => {
         allowNull: true,
       },
       upvote: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: Sequelize.DataTypes.BIGINT,
         allowNull: true,
         defaultValue: 0,
       },

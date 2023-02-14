@@ -3,9 +3,18 @@ import ReactPlayer from "react-player";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
+import Reply from "../community/Reply";
 const VideoDetail = () => {
-  const { videoDetail, relationship, onClickDetailHandler, deleteVideo } =
-    useVideoContentContext();
+  const {
+    videoDetail,
+    relationship,
+    onClickDetailHandler,
+    deleteVideo,
+    setOpenModel,
+    setDetail,
+    setShorts,
+    replyList,
+  } = useVideoContentContext();
   const { userSession } = useUserContext();
   const nav = useNavigate();
   const relationshipItems = relationship.filter((item) => {
@@ -28,6 +37,15 @@ const VideoDetail = () => {
     const deleteData = { Username, v_code };
     deleteVideo(deleteData);
     nav("/");
+  };
+
+  const videoEditingHandler = async (e) => {
+    const v_code = e.target.dataset.v_code;
+    setOpenModel({ video: true });
+    const res = await fetch(`/video/editing/select/${v_code}`);
+    const { videoInfo, shorts } = await res.json();
+    setDetail({ ...videoInfo });
+    setShorts({ ...shorts });
   };
 
   const videoRelationshipView = relationshipItems.map((video) => {
@@ -68,31 +86,34 @@ const VideoDetail = () => {
     return <Navigate to="/" />;
   } else if (videoDetail.v_price === 0) {
     return (
-      <div className="flex ml-32 mt-2">
+      <div className="flex ml-32 mt-2 w-full">
         <div className="flex-1 ">
-          <div className="pb-10 pr-10 block border-b-2">
-            <ReactPlayer
-              url={videoDetail.v_src}
-              width="1350px"
-              height="600px"
-              playing={false}
-              muted={false}
-              controls={true}
-              light={false}
-              pip={false}
+          <div className="pb-10 pr-10 block border-b-2 ">
+            <iframe
+              className="w-full"
+              src={videoDetail.v_src}
+              height="550vw"
               onContextMenu={(e) => e.preventDefault()}
             />
           </div>
-          <div>
+          <div className="w-full">
             <div>
-              <div className="text-4xl">{videoDetail.v_title}</div>
+              <div className="text-4xl w-full">
+                {videoDetail.v_title}
+                <span className="text-sm">조회수 : {videoDetail.v_views}</span>
+              </div>
               <div>{videoDetail.username}</div>
               <div>{videoDetail.v_detail}</div>
+              <div></div>
             </div>
           </div>
           {userSession.username === videoDetail.username ? (
             <div className="flex justify-end">
-              <button className="bg-cyan-600 rounded-md mr-2 text-white p-2 px-3">
+              <button
+                data-v_code={videoDetail.v_code}
+                onClick={videoEditingHandler}
+                className="bg-cyan-600 rounded-md mr-2 text-white p-2 px-3"
+              >
                 수정
               </button>
               <button
@@ -106,8 +127,15 @@ const VideoDetail = () => {
           ) : (
             <></>
           )}
+          <div className="flex">
+            <Reply
+              writer={videoDetail?.username}
+              v_code={videoDetail?.v_code}
+              list={replyList}
+            />
+          </div>
         </div>
-        <aside className="border-l-2 pb-80 flex-1">
+        <aside className="border-l-2 pb-80 flex-2">
           {videoRelationshipView}
         </aside>
       </div>

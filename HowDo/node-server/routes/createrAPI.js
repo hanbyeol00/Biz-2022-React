@@ -6,6 +6,8 @@ const V_CONTENT = DB.models.video;
 const USER = DB.models.user;
 const POST = DB.models.post;
 const REPLY = DB.models.reply;
+const SUBSCRIBE = DB.models.subscribe;
+
 router.get("/search", async (req, res, next) => {
   try {
     const v_result = await V_CONTENT.findAll({ attributes: ["v_title"] });
@@ -41,7 +43,7 @@ router.get("/total/:query", async (req, res, next) => {
       where: { nickname: { [Op.like]: `%${query}%` } },
     });
     const p_result = await POST.findAll({
-      attributes: ["p_title", "p_code", "p_replies", "p_views", "p_upvote"],
+      attributes: ["p_title", "p_code", "p_replies", "p_views", "p_upvotes"],
       where: { p_title: { [Op.like]: `%${query}%` } },
     });
     // const r_result = await REPLY.findAll({
@@ -59,20 +61,45 @@ router.get("/total/:query", async (req, res, next) => {
 });
 router.get("/creater/:id", async (req, res, next) => {
   const nickname = req.params.id;
+  const username = req?.session?.user?.username;
   console.log(nickname);
   let userid;
   try {
     const id = await USER.findOne({
-      attributes: ["profile_image", "title_image", "nickname", "username"],
+      attributes: [
+        "profile_image",
+        "title_image",
+        "nickname",
+        "username",
+        "price",
+      ],
       where: { nickname: nickname },
       raw: true,
     });
-    userid = id.username;
-    const result = await V_CONTENT.findAll({
-      where: { username: userid },
-      limit: 10,
-    });
-    return res.json({ u_result: id, v_result: result });
+    userid = id?.username;
+
+    let result;
+    if (userid) {
+      result = await V_CONTENT.findAll({
+        where: { username: userid },
+        limit: 10,
+      });
+    }
+
+    let chkSub = [];
+    // 사용자가 구독하고 있는 크리에이터
+    if (username) {
+      const sub = await SUBSCRIBE.findAll({
+        attributes: ["partner_order_id", "inactivated_at"],
+        where: { partner_user_id: username },
+        raw: true,
+      });
+
+      chkSub = await sub.filter((s) => s.partner_order_id === id?.username);
+      console.log("구독 크리에이터", chkSub);
+    }
+
+    return res.json({ u_result: id, v_result: result, chkSub });
   } catch (err) {
     console.log(err);
     return res.json({ u_result: null, v_result: null });
@@ -86,18 +113,18 @@ router.get("/:username", async (req, res, next) => {
       where: { nickname: nickname },
       raw: true,
     });
-    console.log(id.username);
-    userid = id.username;
+    console.log(id?.username);
+    userid = id?.username;
     const result = await V_CONTENT.findAll({
       where: { username: userid },
       limit: 10,
     });
-    const group = await V_CONTENT.findAll({
-      group: "v_series",
-    });
-    const count = await V_CONTENT.count({
-      group: "v_series",
-    });
+    // const group = await V_CONTENT.findAll({
+    // group: "v_series",
+    // });
+    // const count = await V_CONTENT.count({
+    // group: "v_series",
+    // });
     // console.log(group, count);
     // console.log(result);
     //  const favorite = await V_CONTENT.findAll({ order: ["v_views", "DESC"] });
@@ -106,10 +133,12 @@ router.get("/:username", async (req, res, next) => {
     return res.json({
       STATUS: 200,
       recent: result,
-      group: group,
-      count: count,
+      // group: group,
+      // count: count,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 export default router;

@@ -1,6 +1,13 @@
 import express from "express";
 import { USER_JOIN_RES, USER_LOGIN_RES } from "../config/api_res_code.js";
-import { chkJoin, chkLogin } from "../modules/user_module.js";
+
+import fileUp from "../modules/createrModules.js";
+import {
+  chkJoin,
+  chkLogin,
+  profileImageUpdate,
+} from "../modules/user_module.js";
+
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
@@ -43,4 +50,19 @@ router.get("/session", (req, res) => {
   return res.json(user);
 });
 
+router.post("/update/:id", fileUp.single("profile"), async (req, res, next) => {
+  let image = req.file.path;
+  console.log(image);
+  //image = image.slice(20 - image.length);
+  console.log(image);
+  const id = req.params.id;
+
+  try {
+    const result = await profileImageUpdate(id, image);
+    console.log(result);
+    return res.json(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
 export default router;

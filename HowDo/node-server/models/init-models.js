@@ -32,6 +32,9 @@ const initModels = (sequelize) => {
   user.belongsToMany(video, { through: v_authority, foreignKey: "username" });
   video.belongsToMany(user, { through: v_authority, foreignKey: "v_code" });
 
+  v_authority.belongsTo(user, { foreignKey: "username" });
+  v_authority.belongsTo(video, { foreignKey: "v_code" });
+
   user.belongsToMany(video, {
     as: "f_video",
     through: view_history,
@@ -42,6 +45,9 @@ const initModels = (sequelize) => {
     through: view_history,
     foreignKey: "v_code",
   });
+
+  view_history.belongsTo(user, { foreignKey: "username" });
+  view_history.belongsTo(video, { foreignKey: "v_code" });
 
   user.belongsToMany(video, {
     as: "f_purchase_video",
@@ -55,6 +61,9 @@ const initModels = (sequelize) => {
     foreignKey: "v_code",
   });
 
+  purchase.belongsTo(user, { foreignKey: "username" });
+  purchase.belongsTo(video, { foreignKey: "v_code" });
+
   user.belongsToMany(image, {
     as: "f_image",
     through: view_history,
@@ -66,6 +75,9 @@ const initModels = (sequelize) => {
     through: view_history,
     foreignKey: "i_code",
   });
+
+  // view_history.belongsTo(user, { foreignKey: "username" });
+  view_history.belongsTo(image, { foreignKey: "i_code" });
 
   user.belongsToMany(image, {
     as: "f_purchase_image",
@@ -79,17 +91,14 @@ const initModels = (sequelize) => {
     foreignKey: "i_code",
   });
 
+  // purchase.belongsTo(user, { foreignKey: "username" });
+  purchase.belongsTo(image, { foreignKey: "i_code" });
+
   user.belongsToMany(image, { through: i_authority, foreignKey: "username" });
   image.belongsToMany(user, { through: i_authority, foreignKey: "i_code" });
 
-  user.hasMany(upvote, { foreignKey: "username" });
-  upvote.belongsTo(user, { foreignKey: "username" });
-
-  post.hasMany(upvote, { foreignKey: "p_code" });
-  upvote.belongsTo(post, { foreignKey: "p_code" });
-
-  user.hasMany(post, { foreignKey: "username" });
-  post.belongsTo(user, { foreignKey: "username" });
+  i_authority.belongsTo(user, { foreignKey: "username" });
+  i_authority.belongsTo(image, { foreignKey: "i_code" });
 
   user.belongsToMany(user, {
     as: "f_sub_user",
@@ -102,6 +111,23 @@ const initModels = (sequelize) => {
     foreignKey: "partner_order_id",
   });
 
+  subscribe.belongsTo(user, { foreignKey: "partner_user_id" });
+  subscribe.belongsTo(user, { foreignKey: "partner_order_id" });
+
+  user.hasMany(upvote, { foreignKey: "username" });
+  upvote.belongsTo(user, { foreignKey: "username" });
+
+  post.hasMany(upvote, { foreignKey: "p_code" });
+  upvote.belongsTo(post, { foreignKey: "p_code" });
+
+  user.hasMany(post, { foreignKey: "username" });
+  post.belongsTo(user, { foreignKey: "username" });
+
+  // user.belongsToMany(user, {
+  //   as: "f_sub",
+  //   through: subscribe,
+  //   foreignKey: "username",
+  // });
   // post.hasMany(attach, { as: "attachs", foreignKey: "p_code" });
   // attach.belongsTo(post, {
   //   as: "rel_post",
@@ -109,7 +135,7 @@ const initModels = (sequelize) => {
   // });
 
   // child reply
-  reply.belongsTo(reply, { as: "reply_child", foreignKey: "r_parent_code" });
+  reply.hasMany(reply, { as: "reply_child", foreignKey: "r_parent_code" });
 
   // import board data
   board.hasMany(post, { foreignKey: "b_code" });
@@ -117,6 +143,9 @@ const initModels = (sequelize) => {
 
   post.hasMany(reply, { foreignKey: "p_code" });
   reply.belongsTo(post, { foreignKey: "p_code" });
+
+  video.hasMany(reply, { foreignKey: "v_code" });
+  reply.belongsTo(video, { foreignKey: "v_code" });
 
   user.hasMany(reply, { foreignKey: "username" });
   reply.belongsTo(user, { foreignKey: "username" });
@@ -127,7 +156,7 @@ const initModels = (sequelize) => {
   user.hasMany(video, { foreignKey: "username" });
   video.belongsTo(user, { foreignKey: "username" });
 
-  video.hasMany(shorts, { as: "VIDEO_SHORTS", foreignKey: "v_code" });
+  video.hasMany(shorts, { foreignKey: "v_code" });
   shorts.belongsTo(video, { foreignKey: "v_code" });
 
   return {

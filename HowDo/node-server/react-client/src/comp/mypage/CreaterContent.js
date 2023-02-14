@@ -11,7 +11,6 @@ import {
   videoNohover,
 } from "../../nav/classNames/ClassNames";
 
-import { useUserContext } from "../../context/UserContextProvider";
 import { useLoaderData } from "react-router-dom";
 import {
   IoArrowForwardCircleSharp,
@@ -21,16 +20,13 @@ import {
  * map 을 이용한 컨텐츠 시리즈별 carousel 제작
  */
 const CreaterContent = () => {
-  const { videoContentList, setVideoContentList, loading, setLoading } =
-    useVideoContentContext();
+  const { videoContentList, setVideoContentList } = useVideoContentContext();
   const result = useLoaderData();
 
   const [position, setPosition] = useState(0);
 
-  const { userSession } = useUserContext();
-
   useEffect(() => {
-    setVideoContentList(result.recent);
+    setVideoContentList(result?.recent);
     console.log(videoContentList);
   }, []);
   const CONTENT_WIDTH = 392;
@@ -93,7 +89,7 @@ const CreaterContent = () => {
   return (
     <div className={myPageContentMain}>
       <span className={nameLabel}>최근 업로드한 영상</span>
-      {result?.recent[0] ? (
+      {videoContentList === undefined ? (
         <>
           <IoArrowBackCircleSharp
             className={videoNextButton}
@@ -112,13 +108,13 @@ const CreaterContent = () => {
         className={videoContenView}
         style={{ transform: `translateX(${position}px)` }}
       >
-        {userSession.username ? (
+        {videoContentList === undefined ? (
           <div className="flex">
             {videoView}
             <div className={moreButton}>더보기</div>
           </div>
         ) : (
-          <div className="m-auto text-3xl">영상이 없습니다</div>
+          <div className="m-60 ml-auto mr-auto text-3xl">영상이 없습니다</div>
         )}
       </div>
     </div>

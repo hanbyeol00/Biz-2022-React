@@ -12,6 +12,10 @@ export default (sequelize, DataTypes) => {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: true,
       },
+      v_code: {
+        type: Sequelize.DataTypes.STRING(256),
+        allowNull: true,
+      },
       username: {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: true,
@@ -46,6 +50,11 @@ export default (sequelize, DataTypes) => {
       r_parent_code: {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: true,
+      },
+      r_children: {
+        type: Sequelize.DataTypes.BIGINT,
+        allowNull: true,
+        defaultValue: 0,
       },
     },
     {

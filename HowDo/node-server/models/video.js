@@ -35,6 +35,7 @@ export default (sequelize) => {
       v_views: {
         type: Sequelize.DataTypes.BIGINT,
         allowNull: true,
+        defaultValue: 0,
       },
       v_series: {
         type: Sequelize.DataTypes.STRING(256),
@@ -62,6 +63,11 @@ export default (sequelize) => {
         type: Sequelize.DataTypes.STRING(125),
         allowNull: true,
         default: "false",
+      },
+      v_replies: {
+        type: Sequelize.DataTypes.BIGINT,
+        allowNull: true,
+        defaultValue: 0,
       },
     },
     {

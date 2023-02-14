@@ -10,12 +10,14 @@ import { IoMenu, IoSearchOutline } from "react-icons/io5";
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
   const navigate = useNavigate();
-  const { currentSearch, onChange, onKeyUp, autoComplete } =
+  const { currentSearch, onChange, onKeyUp, autoComplete, setCurrentSearch } =
     useAutoSearchContext();
   const { userSession, logoutHandler } = useUserContext();
   const { searchKeyword, setSearchKeyword } = useAutoSearchContext();
+  const [idx, setIdx] = useState(0);
+  const [temp, setTemp] = useState();
   const searchRef = useRef(null);
-
+  const searchParentRef = useRef();
   const borderStyle = {
     padding: "1rem",
     borderBottomWidth: "2px",
@@ -35,34 +37,74 @@ const NavRow = () => {
     }
   };
 
-  const pressEnter = async (e) => {
-    if (e.keyCode === 13) {
-      if (!currentSearch) {
-        alert("검색어를 입력하세요");
-        searchRef.current.focus();
-      } else {
-        setSearchKeyword(currentSearch);
-        navigate(`/search/${currentSearch}`);
+  const pressEnter = (e) => {
+    setIdx(0);
+    const word = searchParentRef?.current?.children;
+    if (!currentSearch && e.keyCode === 13) {
+      alert("검색어를 입력하세요");
+      searchRef.current.focus();
+    }
+    if (currentSearch) {
+      switch (e.keyCode) {
+        case 38:
+          if (idx - 1 === -1) {
+            setIdx(searchParentRef.current.childElementCount - 1);
+          } else setIdx(idx - 1);
+
+          console.log(idx);
+
+          setTemp(word[idx]?.innerText);
+          console.log(temp);
+
+          break;
+        case 40:
+          console.log(idx);
+          setIdx(idx + 1);
+          setTemp(word[idx]?.innerText);
+          console.log(temp);
+          if (searchParentRef.current.childElementCount === idx + 1) setIdx(0);
+
+          break;
+        case 27:
+          setIdx(0);
+          setCurrentSearch();
+          break;
+        case 13:
+          if (temp) setCurrentSearch(temp);
+          else setCurrentSearch(currentSearch);
+          navigate(`/search/${currentSearch}`);
+          setCurrentSearch();
+          break;
       }
     }
   };
 
   const openClickHandler = () => {
     setNOpen(!nOpen);
-    console.log(nOpen);
+    // console.log(nOpen);
   };
 
   const autoCompleteView = autoComplete?.map((word, index) => {
     return (
-      <div
-        key={index}
-        className="autocomplete cursor-pointer pl-4 mb-1 hover:bg-gray-300 rounded-lg"
-      >
-        {word}
-      </div>
+      <>
+        {idx === index ? (
+          <div
+            key={index}
+            className="autocomplete cursor-pointer pl-4 mb-1 hover:bg-gray-300 rounded-lg bg-gray-300"
+          >
+            {word}
+          </div>
+        ) : (
+          <div
+            key={index}
+            className="autocomplete cursor-pointer pl-4 mb-1 hover:bg-gray-300 rounded-lg"
+          >
+            {word}
+          </div>
+        )}
+      </>
     );
   });
-  console.log(autoComplete);
   return (
     <>
       <div className="mainbar flex bg-black/90 top-0 left-0 right-0 mb-12 fixed pr-2 z-50">
@@ -84,7 +126,10 @@ const NavRow = () => {
             style={borderStyle}
           />
           {autoComplete ? (
-            <div className="absolute top-12 left-0 min-h-fit min-w-[213px] bg-white border-black rounded-lg shadow-lg">
+            <div
+              className="absolute top-12 left-0 min-h-fit min-w-[213px] bg-white border-black rounded-lg shadow-lg"
+              ref={searchParentRef}
+            >
               {autoCompleteView}
             </div>
           ) : null}

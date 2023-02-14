@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS user(
 	credit	INT,		
 	delete_date	VARCHAR(256),		
 	price	INT,
-    upvote INT DEFAULT 0,
+    upvote BIGINT DEFAULT 0,
     title_image VARCHAR(256),
 	PRIMARY KEY(username)	
 );
@@ -120,8 +120,9 @@ CREATE TABLE IF NOT EXISTS reply(
 	r_content	VARCHAR(256),		
 	r_created	DATETIME	DEFAULT CURRENT_TIMESTAMP,		
 	r_updated	DATETIME	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
-	r_deleted	VARCHAR(125),		
-	r_parent_code	VARCHAR(256),
+	r_deleted	VARCHAR(125),	
+	r_children BIGINT DEFAULT 0,
+    _parent_code	VARCHAR(256),
 	PRIMARY KEY(r_code)
 );
 
@@ -149,7 +150,7 @@ h_code	VARCHAR(256)		PRIMARY KEY	,
 username	VARCHAR(256),
 v_code	VARCHAR(256),
 i_code	VARCHAR(256),
-h_date	datetime						DEFAULT CURRENT_TIMESTAMP
+h_date	datetime DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 구독 테이블
@@ -163,6 +164,3 @@ inactivated_at	VARCHAR(50)		,
 PRIMARY KEY(partner_user_id,partner_order_id)
 
 );
-
-
-

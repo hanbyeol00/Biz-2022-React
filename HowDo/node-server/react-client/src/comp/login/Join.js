@@ -5,29 +5,21 @@ const Join = () => {
   const { joinUser, setJoinUser, error, setError, inputRef } = useUserContext();
 
   const onChangeHandler = async (e) => {
-    // const tagName = e.target.tagName;
+    const tagName = e.target.tagName;
     const { name, value } = e.target;
-    await setJoinUser({ ...joinUser, [name]: value });
+    await setJoinUser({ ...joinUser, [name]: value, name: tagName });
     console.log(joinUser);
   };
 
   const onClickHandler = async (e) => {
-    // const tagName = e.target.tagName;
-    // if (tagName === "BUTTON") {
-    //   await setJoinUser({ ...joinUser, name: tagName });
-    // }
-    const result = await fetchJoin(joinUser);
-    if (result.CODE) {
-      setError({ ...result });
+    const tagName = e.target.tagName;
+    if (tagName === "BUTTON") {
+      await setJoinUser({ ...joinUser, name: tagName });
     }
-    if (result === joinUser.username) {
-      document.location.href = "/";
-      alert("회원가입이 완료되었습니다");
-    }
-    console.log(result);
   };
+
   useEffect(() => {
-    const item = async () => {
+    (async () => {
       const result = await fetchJoin(joinUser);
       if (result.CODE) {
         setError({ ...result });
@@ -37,13 +29,8 @@ const Join = () => {
         alert("회원가입이 완료되었습니다");
       }
       console.log(result);
-    };
-    item();
+    })();
   }, [joinUser]);
-
-  const twoEvent = async (e) => {
-    await onChangeHandler(e);
-  };
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -80,8 +67,7 @@ const Join = () => {
                       type="email"
                       name="username"
                       id="username"
-                      onChange={twoEvent}
-                      onBlur={twoEvent}
+                      onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_USERNAME" ? (
@@ -106,8 +92,7 @@ const Join = () => {
                       type="text"
                       name="nickname"
                       id="nickname"
-                      onChange={twoEvent}
-                      onBlur={twoEvent}
+                      onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_NICKNAME" ? (

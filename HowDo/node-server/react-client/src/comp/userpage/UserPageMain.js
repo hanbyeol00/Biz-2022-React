@@ -2,8 +2,8 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { usePayContext } from "../../context/PayContextProvider";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import Purchase from "../purchase/Purchase";
+import Cancel from "../purchase/Cancel";
 import CreaterPageContent from "./CreaterPageContent";
-import { useEffect } from "react";
 
 export const userPageFetch = async ({ params }) => {
   const username = params.id;
@@ -11,15 +11,21 @@ export const userPageFetch = async ({ params }) => {
   const createrResult = await response?.json();
   return createrResult;
 };
+
 const UserPageMain = () => {
-  const { userSession, modalHandler } = useUserContext();
+  const { userSession, modalHandler, cancelHandler } = useUserContext();
   const { payReadyBody, statePayReady } = usePayContext();
   const createrResult = useLoaderData();
   const navigate = useNavigate();
   const twoClickEvent = () => {
+    const orderUser = createrResult?.u_result?.username;
+    const price = createrResult?.u_result?.price;
     modalHandler();
-    payReadyBody(createrResult?.u_result?.username);
+    payReadyBody(orderUser, price);
     console.log(statePayReady);
+  };
+  const cancelClick = () => {
+    cancelHandler();
   };
 
   // const returnHome = () => {
@@ -63,12 +69,24 @@ const UserPageMain = () => {
             <div className="ml-6 mt-auto mb-auto hover:text-blue-600 hover:cursor-pointer">
               {createrResult?.u_result?.nickname}
             </div>
-            <div
-              className="ml-auto hover:text-blue-600 hover:cursor-pointer"
-              onClick={twoClickEvent}
-            >
-              구독
-            </div>
+            {createrResult.chkSub[0] &&
+            createrResult.chkSub[0].inactivated_at === null ? (
+              <div
+                className="ml-auto hover:text-blue-600 hover:cursor-pointer"
+                onClick={cancelClick}
+              >
+                구독 중
+              </div>
+            ) : userSession.nickname !== createrResult?.u_result?.nickname &&
+              userSession.nickname ? (
+              <div
+                className="ml-auto hover:text-blue-600 hover:cursor-pointer"
+                onClick={twoClickEvent}
+              >
+                구독
+              </div>
+            ) : null}
+
             {createrResult?.u_result?.username === userSession.username ? (
               <div>게시글 작성</div>
             ) : null}
@@ -76,7 +94,11 @@ const UserPageMain = () => {
           <div className="ml-44">
             <CreaterPageContent />
           </div>{" "}
-          <Purchase />{" "}
+          <Purchase
+            nickname={createrResult?.u_result?.nickname}
+            price={createrResult?.u_result?.price}
+          />{" "}
+          <Cancel orderUser={createrResult?.u_result?.username} />
         </div>
       ) : (
         (alert("존재하지 않는 회원입니다"), navigate("/"))

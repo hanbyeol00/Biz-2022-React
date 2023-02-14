@@ -44,7 +44,7 @@ export const AutoSearchContextProvider = ({ children }) => {
 
   // 자동완성 popup 에서 value 추출 후 input value 로 치환 함수
   const autoClick = (e) => {
-    console.log(e.target.className);
+    // console.log(e.target.className);
     if (e.target.className.indexOf("autocomplete") === 0) {
       setCurrentSearch(e.target.innerHTML);
       setAutoComplete([null]);

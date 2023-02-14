@@ -1,4 +1,4 @@
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { defer, useLoaderData, useNavigate } from "react-router-dom";
 import {
   nameSpan,
   searchItemwrap,
@@ -7,18 +7,19 @@ import {
 export const loader = async () => {
   const res = await fetch("/mypage/creater");
   const CreaterR = await res.json();
-  return CreaterR;
+  console.log({ CreaterR });
+  return defer({ CreaterR });
 };
 const CreaterMain = () => {
   const navigate = useNavigate();
   const CreaterR = useLoaderData();
-  console.log(CreaterR);
+
   return (
     <div className="flex flex-col ml-40 w-full">
       <span className={nameSpan}>크리에이터</span>
       <div className={wrapperDiv}>
         {CreaterR ? (
-          CreaterR.map((item) => {
+          CreaterR.CreaterR?.map((item) => {
             return (
               <div
                 className={searchItemwrap}

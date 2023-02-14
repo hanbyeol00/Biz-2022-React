@@ -26,6 +26,10 @@ export default (sequelize) => {
         type: Sequelize.DataTypes.STRING(20),
         allowNull: false,
       },
+      first_payment: {
+        type: Sequelize.DataTypes.STRING(50),
+        allowNull: false,
+      },
       approved_at: {
         type: Sequelize.DataTypes.STRING(50),
         allowNull: false,

@@ -4,7 +4,7 @@
 import Editor from "ckeditor5-custom-build/build/ckeditor";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 
-export const EditorModule = ({ data, handler, code, setUrlData }) => {
+export const EditorModule = ({ data, handler, code }) => {
   const BACKEND_URI = "http://localhost:3000";
 
   // UploadAdapter Interface 를 implement 하여 CustomAdapter 구현
@@ -54,16 +54,6 @@ export const EditorModule = ({ data, handler, code, setUrlData }) => {
       xhr.addEventListener("abort", () => reject());
       xhr.addEventListener("load", () => {
         const response = xhr.response;
-        // thumbnail setting
-        setUrlData({
-          url: response.url,
-          tag: (
-            <img
-              key={response.url}
-              src={`${BACKEND_URI}/public/uploads/${response.url}`}
-            />
-          ),
-        });
 
         // response 객체의 값이 없거나 error 를 포함할 경우
         // Promise.reject 실행(rejected;업로드 실패)
@@ -127,6 +117,11 @@ export const EditorModule = ({ data, handler, code, setUrlData }) => {
       onReady={(editor) => {
         // adapter plugin
         editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+          loader.on("change:uploadResponse", (evt, name, val, oldval) => {
+            if (val) {
+              console.log(val); // { default: "image link" }
+            }
+          });
           return new imageUploadAdapter(loader);
         };
         // 게시글 수정 시 editor 에 게시글 data(context 의 postData.b_content) setting
