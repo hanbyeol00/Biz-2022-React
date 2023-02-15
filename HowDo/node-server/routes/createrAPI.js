@@ -76,7 +76,7 @@ router.get("/creater/:id", async (req, res, next) => {
       where: { nickname: nickname },
       raw: true,
     });
-    userid = id?.username;
+    userid = id.username;
 
     let result;
     if (userid) {
@@ -137,7 +137,7 @@ router.get("/:username", async (req, res, next) => {
       // count: count,
     });
   } catch (error) {
-    console.log(error);
+    console.log("error");
   }
 });
 

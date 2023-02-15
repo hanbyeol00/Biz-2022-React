@@ -20,6 +20,10 @@ const MainContentRow = () => {
   const nav = useNavigate();
   const observer = useRef();
 
+  useEffect(() => {
+    setPage(1);
+  }, []);
+
   const lastVideoElementRef = useCallback((lastVideo) => {
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver((entries) => {

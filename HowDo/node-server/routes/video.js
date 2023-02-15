@@ -11,6 +11,7 @@ const router = express.Router();
 
 const Video = DB.models.video;
 const SHORTS = DB.models.shorts;
+const USER = DB.models.user;
 
 router.get("/shorts", async (req, res) => {
   const result = await SHORTS.findAll({
@@ -85,7 +86,19 @@ router.get("/detail/:v_code", async (req, res) => {
       { where: { v_code: v_code } }
     );
     result = await Video.findOne({
+      attributes: [
+        "v_code",
+        "username",
+        "v_src",
+        "v_title",
+        "v_detail",
+        "v_price",
+        "v_category",
+        "v_views",
+        "v_create_date",
+      ],
       where: { v_code: v_code, v_delete_date: null },
+      include: [{ model: USER, as: "f_user_video" }],
     });
   } catch (e) {
     return res.json({ code: 404, message: "데이터가 없습니다", v_price: 0 });

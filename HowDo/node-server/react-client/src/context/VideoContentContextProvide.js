@@ -54,6 +54,7 @@ export const VideoContentContextProvider = ({ children }) => {
   const onClickDetailHandler = async (v_code) => {
     const res = await fetch(`/video/detail/${v_code}`);
     const { video, category } = await res.json();
+    console.log(video);
     setVideoDetail({ ...video });
     setRelationship([...category]);
     await new Promise((r) => setTimeout(r, 100));

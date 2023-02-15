@@ -16,7 +16,6 @@ const VideoInfiniteScrolling = (pageNumber) => {
         const result = await res.json();
         let tempArray = [...result];
         tempArray.sort(() => Math.random() - 0.5);
-        console.log(tempArray);
         setVideoItemList((prev) => {
           return [...new Set([...prev, ...tempArray])];
         });

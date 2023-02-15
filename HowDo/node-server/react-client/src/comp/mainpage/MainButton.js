@@ -9,13 +9,12 @@ const MainButton = () => {
 
   const item = async () => {
     await setPage(1);
-    await new Promise((r) => setTimeout(r, 100));
-    await new Promise((r) => setTimeout(r, 100));
     const res = await fetch(`/video/main/${page}`);
     const result = await res.json();
     let tempArray = [...result];
     tempArray.sort(() => Math.random() - 0.5);
     setVideoItemList([...tempArray]);
+    await new Promise((r) => setTimeout(r, 100));
   };
 
   const bbsOpen = () => {
@@ -27,8 +26,8 @@ const MainButton = () => {
     // console.log(context.bbsButton);
   };
   const contentOpen = async () => {
-    navigate("/");
     await item();
+    navigate("/");
     if (context.bbsButton) context.setBbsButton(false);
     if (!context.bbsButton) context.setContentButton(true);
     else context.setContentButton(!context.contentButton);

@@ -1,0 +1,7 @@
+details > summary {
+  cursor: pointer;
+  list-style: none;
+}
+div.video_detail {
+  white-space: pre-wrap;
+}

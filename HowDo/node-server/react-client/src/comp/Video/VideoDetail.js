@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import ReactPlayer from "react-player";
+import { useEffect, useState } from "react";
+import "../../css/detailsTag.css";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
@@ -16,6 +16,7 @@ const VideoDetail = () => {
     replyList,
   } = useVideoContentContext();
   const { userSession } = useUserContext();
+  const { detailsOpen, setDetailsOpen } = useState(false);
   const nav = useNavigate();
   const relationshipItems = relationship.filter((item) => {
     return item.v_code !== videoDetail.v_code;
@@ -46,6 +47,53 @@ const VideoDetail = () => {
     const { videoInfo, shorts } = await res.json();
     setDetail({ ...videoInfo });
     setShorts({ ...shorts });
+  };
+
+  const clickHandler = (e) => {
+    const details = e.target.closest("details");
+    if (!details.open) {
+      console.log(details.open);
+      e.target.innerText = "동영상 설명 접기";
+    } else {
+      e.target.innerText = "동영상 설명 펼치기";
+    }
+  };
+
+  const timeForToday = () => {
+    const today = new Date(); // 현재 시간
+    const videoCreateDate = new Date(videoDetail.v_create_date); // 영상의 업로드된 시간
+
+    /**
+     * obj.getTime() = 1970 년 1 월 1 일 00:00:00 와 주어진 날짜의 경과시간을 밀리초 단위로 나타내는 숫자
+     */
+
+    const betweenTime = Math.floor(
+      (today.getTime() - videoCreateDate.getTime()) / 1000 / 60 // 분단위를 계산하는 식
+    );
+    if (betweenTime < 1) return "방금전"; // 1분미만 초단위는 방금전으로 표시
+    if (betweenTime < 60) {
+      // 업로드 시간이 60분보다 작을시 "N분전" 으로 표시
+      return `${betweenTime}분 전`;
+    }
+
+    const betweenTimeHour = Math.floor(betweenTime / 60); // 시간 단위를 계산하는 식
+    if (betweenTimeHour < 24) {
+      // 업로드 시간이 24시간보다 작을시 "N시간전" 으로 표시
+      return `${betweenTimeHour}시간 전`;
+    }
+
+    const betweenTimeDay = Math.floor(betweenTime / 60 / 24); // 일 단위를 계산하는 식
+    if (betweenTimeDay < 30) {
+      // 업로드 시간이 30일보다 작을시 "N일전" 으로 표시
+      return `${betweenTimeDay}일 전`;
+    }
+    const betweenTimeMonth = Math.floor(betweenTimeDay / 30); // 월 단위를 계산하는 식
+    if (betweenTimeDay < 12) {
+      // 업로드 시간이 12월보다 작을시 "N개월 전" 으로 표시
+      return `${betweenTimeMonth}개월 전`;
+    }
+
+    return `${Math.floor(betweenTimeDay / 365)}년 전`; // 년 단위를 계산하는 식
   };
 
   const videoRelationshipView = relationshipItems.map((video) => {
@@ -97,14 +145,19 @@ const VideoDetail = () => {
             />
           </div>
           <div className="w-full">
-            <div>
-              <div className="text-4xl w-full">
-                {videoDetail.v_title}
-                <span className="text-sm">조회수 : {videoDetail.v_views}</span>
+            <div className="m-4">
+              <div className="text-4xl">{videoDetail.v_title}</div>
+              <div>{videoDetail.f_user_video.nickname}</div>
+              <div className="flex flex-wrap">
+                <div>{timeForToday()}</div>
+                <div className="ml-4">조회수 : {videoDetail.v_views}</div>
               </div>
-              <div>{videoDetail.username}</div>
-              <div>{videoDetail.v_detail}</div>
-              <div></div>
+              <details className="bg-gray-100 p-2 rounded">
+                <summary onClick={clickHandler} className="text-zinc-700">
+                  동영상 설명 펼치기
+                </summary>
+                <div className="video_detail">{videoDetail.v_detail}</div>
+              </details>
             </div>
           </div>
           {userSession.username === videoDetail.username ? (
@@ -129,7 +182,7 @@ const VideoDetail = () => {
           )}
           <div className="flex">
             <Reply
-              writer={videoDetail?.username}
+              writer={videoDetail?.f_user_video?.nickname}
               v_code={videoDetail?.v_code}
               list={replyList}
             />
