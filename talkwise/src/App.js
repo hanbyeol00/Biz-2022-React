@@ -30,16 +30,16 @@ function App() {
     }
   }, [voice]);
 
-  const handleListen = () => {
-    setVoice("");
-    setAnswering("");
-    listen();
-  };
   // console.log(answering);
   return (
     <div>
       <div>{answering}</div>
-      <button onClick={handleListen}>🎤</button>
+      <button
+        onMouseDown={() => listen({ interimResults: false })}
+        onMouseUp={stop}
+      >
+        🎤
+      </button>
       {listening && (
         <>
           <div>음성인식 활성화 중</div>
