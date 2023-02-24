@@ -1,95 +1,60 @@
-import React, { useState } from "react";
-import "./BookmarkPage.css";
-
-const initialData = {
-  general: [
-    {
-      question: "What is React?",
-      answer: "React is a JavaScript library for building user interfaces.",
-    },
-    {
-      question: "What is JSX?",
-      answer:
-        "JSX is a syntax extension for JavaScript, used with React to describe what the user interface should look like.",
-    },
-  ],
-  programming: [
-    {
-      question: "What is a loop?",
-      answer:
-        "A loop is a programming construct that repeats a sequence of instructions until a specific condition is met.",
-    },
-    {
-      question: "What is a variable?",
-      answer:
-        "A variable is a storage location for data in a computer program.",
-    },
-  ],
-  framework: [
-    {
-      question: "What is Angular?",
-      answer:
-        "Angular is a TypeScript-based open-source web application framework led by the Angular Team at Google.",
-    },
-    {
-      question: "What is Vue.js?",
-      answer:
-        "Vue.js is an open-source progressive JavaScript framework for building user interfaces.",
-    },
-  ],
-};
+import React, { useEffect, useState } from "react";
+import "../css/style.scss";
 
 function Bookmark() {
-  const [showMenu, setShowMenu] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("general");
-  const [data, setData] = useState(initialData);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [data, setData] = useState([]);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setShowMenu(!showMenu);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("/test/bookmark");
+      const result = await res.json();
+      setData([...result]);
+    };
+    fetchData();
+  }, []);
+
+  const toggleNav = () => {
+    setIsNavOpen(!isNavOpen);
   };
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
   };
-
+  console.log(data);
   return (
-    <div className="App">
-      <header className="App-header">
-        <button className="hamburger-button" onClick={toggleMenu}>
-          <span className="hamburger-icon" />
-        </button>
-        <h1>FAQ</h1>
-      </header>
-      <div className={`category-menu ${showMenu ? "show-menu" : ""}`}>
-        <ul>
-          <li
-            className={selectedCategory === "general" ? "selected" : ""}
-            onClick={() => handleCategoryClick("general")}
-          >
-            General
-          </li>
-          <li
-            className={selectedCategory === "programming" ? "selected" : ""}
-            onClick={() => handleCategoryClick("programming")}
-          >
-            Programming
-          </li>
-          <li
-            className={selectedCategory === "framework" ? "selected" : ""}
-            onClick={() => handleCategoryClick("framework")}
-          >
-            Framework
-          </li>
-        </ul>
-      </div>
-      <main>
-        {data[selectedCategory].map((qa, index) => (
-          <div key={index} className="qa-set">
-            <h2>{qa.question}</h2>
-            <p>{qa.answer}</p>
+    <div className="BookMark">
+      <div className="nav-container">
+        <nav className={isNavOpen ? "nav-open" : ""}>
+          <div className="menu-btn" onClick={toggleNav}>
+            <div className="line line__1"></div>
+            <div className="line line__2"></div>
+            <div className="line line__3"></div>
           </div>
-        ))}
-      </main>
+          <ul className="nav-links">
+            <li
+              className={selectedCategory === "All" ? "selected" : ""}
+              onClick={() => handleCategoryClick("All")}
+            >
+              All
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div className="content-container">
+        <header className="App-header">
+          <h1 className="FAQ">FAQ</h1>
+        </header>
+        <main>
+          {data.map((qa, index) => (
+            <div key={index} className="qa-set">
+              <h2>{qa.f_talk_cate.question}</h2>
+              <p>{qa.f_talk_cate.answer}</p>
+            </div>
+          ))}
+        </main>
+      </div>
     </div>
   );
 }
