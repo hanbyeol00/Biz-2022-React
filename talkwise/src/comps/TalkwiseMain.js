@@ -24,28 +24,28 @@ const TalkwiseMain = () => {
     const audio = new Audio(`data:audio/mp3;base64,${base64Audio}`);
     audio.play();
   };
-
-  useEffect(() => {
-    const translation = async () => {
-      setLoading(true);
-      //   setQuestion("안녕");
-      const fetchOption = {
-        method: "POST",
-        body: JSON.stringify({ voice: question }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const res = await fetch("/test/papago", fetchOption);
-      const { text, audioContent } = await res.json();
-      setAnswering(text);
-      setBase64Audio(audioContent);
-      setLoading(false);
+  const translation = async () => {
+    setLoading(true);
+    setQuestion("너가 할수 있는게 뭐가 있니?");
+    const fetchOption = {
+      method: "POST",
+      body: JSON.stringify({ voice: question }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     };
-    if (question) {
-      translation();
-    }
-  }, [question]);
+    const res = await fetch("/test/papago", fetchOption);
+    const { text, audioContent } = await res.json();
+    setAnswering(text);
+    setBase64Audio(audioContent);
+    setLoading(false);
+  };
+
+  // useEffect(() => {
+  //   if (question) {
+  //     translation();
+  //   }
+  // }, [question]);
 
   const handleListen = () => {
     setQuestion("");
@@ -89,7 +89,7 @@ const TalkwiseMain = () => {
         <button
           //   onMouseDown={() => listen({ interimResults: false })}
           //   onMouseUp={stop}
-          onClick={handleListen}
+          onClick={translation}
           className="voice-button"
           disabled={loading ? "disabled" : ""}
         >
