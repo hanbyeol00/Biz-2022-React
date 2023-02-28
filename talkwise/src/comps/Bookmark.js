@@ -3,11 +3,16 @@ import "../css/style.scss";
 import CategoryAddModal from "./CategoryAddModal";
 
 function Bookmark() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState({ category: "All" });
   const [categoryItem, setCategoryItem] = useState([]);
   const [data, setData] = useState([]);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [categoryEdit, setCategoryEdit] = useState({
+    prevCategory: "",
+    t_seq: [],
+    category: "",
+  });
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -15,7 +20,7 @@ function Bookmark() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`/test/bookmark/${selectedCategory}`);
+      const res = await fetch(`/test/bookmark/${selectedCategory.category}`);
       const { result, categoryList } = await res.json();
       setData([...result]);
       setCategoryItem([...categoryList]);
@@ -27,8 +32,8 @@ function Bookmark() {
     setIsNavOpen(!isNavOpen);
   };
 
-  const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
+  const handleCategoryClick = (c) => {
+    setSelectedCategory((prevState) => ({ ...prevState, category: c }));
   };
   const uniqueCategories = [
     ...new Set(categoryItem.map((category) => category.category)),
@@ -65,7 +70,43 @@ function Bookmark() {
         console.error("네트워크 작업에 문제가 있습니다:", error);
       });
 
-    setSelectedCategory("All");
+    setSelectedCategory((prevState) => ({ ...prevState, category: "All" }));
+  };
+
+  const editOnClickHandler = (c) => {
+    const tSeqArray = data.map((item) => item.t_seq);
+    setCategoryEdit((prevState) => ({
+      ...prevState,
+      prevCategory: c,
+      category: c,
+      t_seq: tSeqArray,
+    }));
+    setSelectedCategory((prevState) => ({ ...prevState, category: c }));
+    toggleModal();
+  };
+
+  const audioPlay = async (t_seq) => {
+    try {
+      const res = await fetch(`/test/audio`, {
+        method: "POST",
+        body: JSON.stringify({ t_seq: t_seq }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        const errorMessage = await res.text();
+        throw new Error(errorMessage);
+      }
+
+      const base64Audio = await res.json();
+      const audio = new Audio(`data:audio/mp3;base64,${base64Audio.audio}`);
+      audio.play();
+      return audio;
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -86,24 +127,22 @@ function Bookmark() {
                 <li
                   key={category.category}
                   className={
-                    selectedCategory === `${category.category}`
+                    selectedCategory.category === `${category.category}`
                       ? "selected"
                       : ""
                   }
                   onClick={() => handleCategoryClick(`${category.category}`)}
                 >
                   {category.category}
-                  {category.category !== "All" && (
-                    <div
-                      className="edit_category_button"
-                      onClick={() => {
-                        setSelectedCategory(category.category);
-                        toggleModal();
-                      }}
-                    >
-                      수정
-                    </div>
-                  )}
+                  {category.category !== "All" &&
+                    selectedCategory.category === category.category && (
+                      <div
+                        className="edit_category_button"
+                        onClick={() => editOnClickHandler(category.category)}
+                      >
+                        수정
+                      </div>
+                    )}
                 </li>
               );
             })}
@@ -118,13 +157,15 @@ function Bookmark() {
           <h1 className="FAQ">FAQ</h1>
           <h2
             className="category"
-            style={{ marginLeft: selectedCategory === "All" ? "6em" : "8em" }}
+            style={{
+              marginLeft: selectedCategory.category === "All" ? "6em" : "8em",
+            }}
           >
-            카테고리 : {selectedCategory}
-            {selectedCategory !== "All" && (
+            카테고리 : {selectedCategory.category}
+            {selectedCategory.category !== "All" && (
               <span
                 className="bookmark-delete"
-                data-category={selectedCategory}
+                data-category={selectedCategory.category}
                 onClick={onDeleteHandler}
               >
                 &times;
@@ -134,7 +175,13 @@ function Bookmark() {
         </header>
         <main>
           {data.map((qa, index) => (
-            <div key={index} className="qa-set">
+            <div
+              key={index}
+              className="qa-set"
+              onClick={() => {
+                audioPlay(qa.t_seq);
+              }}
+            >
               <h2>{qa.f_talk_cate.question}</h2>
               <p>{qa.f_talk_cate.answer}</p>
             </div>
@@ -146,6 +193,8 @@ function Bookmark() {
         toggleModal={toggleModal}
         qaData={categoryItem}
         setSelectedCategory={setSelectedCategory}
+        categoryEdit={categoryEdit}
+        setCategoryEdit={setCategoryEdit}
       />
     </div>
   );
