@@ -51,13 +51,37 @@ const BBs = () => {
    * deps 의 상태에 따라 Effect() 가 달리 실행된다
    * return : 이전 상태가 UnMount 될때
    * 기본 cb : 상태가 Mount 될때 실행
+   *
+   * counter state 가 변경이 되었을때만 실행되는
+   * 감시 event handler 역활을 수행한다
+   * counter state 의 변수 값이 prev 값과 새로운 값이
+   * 변화가 없으면 이 Effect 는 실행되지 않는다
    */
   useEffect(() => {
     console.log(`counter set : ${counter}`);
+    setCounter(1);
     return () => {
       console.log(`counter prevSet : ${counter}`);
     };
   }, [counter]);
+
+  useEffect(() => {
+    console.log("Book", book);
+    /**
+     * deps 값이 객체(object), 배열등 일 경우
+     * Effect 내부에서 해당 값을 SetState() 로
+     * 변경하면 안된다
+     * 그러면 useEffect() 가 무한 반복되는 현상이
+     * 발생한다
+     *
+     * 만약 객체를 deps 로 선언하고 SetState() 함수를
+     * 사용하려면 객체의 각 요소를 모두 deps 에 분해해야 한다
+     */
+    setBook((preBook) => ({ ...preBook, title: "JS" }));
+    return () => {
+      console.log("Book prev", book);
+    };
+  }, [book.title, book.author, book.price]);
 
   //   const counterClick = () => {
   //     console.log("Counter Click");
@@ -67,8 +91,26 @@ const BBs = () => {
   // 함수의 재 사용
   const onCounterClickHandler = useCallback(() => {
     console.log("CounterClick");
-    setCounter(++count.current);
+    setCounter(count.current);
   }, []);
+
+  /**
+   * setBook state 함수를 사용하여
+   * book state 를 다시 Setting 하고 있다
+   * 하지만 여기에서 원래 title 인 JS 와
+   * 새롭게 Setting 되는 title 은 같은 JS 이다
+   * 그럼에도 불구하고 useEffect() 계속 실행되고 있다
+   *
+   * book 은 데이터 type 이 객체(object) 이다
+   * 값은 동일 하지만 데이터가 저장되는 기억장소(주소)가
+   * 계속 새롭게 만들어진다
+   * 이때 useEffect 는 값이 비교하지 않고 book 객체 자체를
+   * 비교하여 주소변경을 state 가 변화되었다고 인식해 버린다
+   */
+  const onBookClickHandler = useCallback(() => {
+    console.log("Book Click");
+    setBook((preBook) => ({ ...preBook, title: "JS" }));
+  });
 
   return (
     <>
@@ -76,6 +118,7 @@ const BBs = () => {
       <h2>{username}</h2>
       {console.log("Comps Body")}
       <h2 onClick={onCounterClickHandler}>Counter : {counter}</h2>
+      <h2 onClick={onBookClickHandler}>도서명 : {book.title}</h2>
     </>
   );
 };
