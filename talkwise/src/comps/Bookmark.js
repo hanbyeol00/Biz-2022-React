@@ -158,7 +158,7 @@ function Bookmark() {
           <h2
             className="category"
             style={{
-              marginLeft: selectedCategory.category === "All" ? "6em" : "8em",
+              marginLeft: selectedCategory.category === "All" ? "13em" : "15em",
             }}
           >
             카테고리 : {selectedCategory.category}

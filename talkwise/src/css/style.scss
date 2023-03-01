@@ -1,10 +1,9 @@
 body {
   position: relative;
   width: 100%;
-  height: 100vh;
   font-family: "Montserrat";
   background-size: cover;
-  overflow: hidden;
+  // overflow: hidden;
 }
 @mixin flex-center {
   display: flex;
@@ -13,21 +12,25 @@ body {
 }
 .BookMark {
   display: flex;
+  width: 100%;
   height: 100%;
 }
 h1.FAQ {
   padding: 2em;
   width: 100%;
-  margin-left: 4.5em;
+  margin-left: 10em;
   margin-right: 4.5em;
 }
 main {
-  margin-left: 12em;
-  margin-right: 12em;
+  margin-left: 23em;
+  margin-right: 23em;
   width: 100%;
 }
 .nav-container {
-  width: 10%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
 }
 .content-container {
   width: 65%;
@@ -46,8 +49,6 @@ main {
 
 h2.category {
   width: 100%;
-  margin-left: 8em;
-  margin-right: 6em;
   text-align: center;
 }
 
@@ -165,40 +166,40 @@ nav {
     }
   }
 
-  .sub-menu {
-    --link-height: 60px;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    transform: translateY(-50%);
-    ol {
-      list-style: none;
-      li {
-        @include flex-center();
-        height: var(--link-height);
-        transition: all var(--transition-time) ease;
-        transition-delay: calc(30ms + var(--delay));
-        cursor: pointer;
-        &:hover {
-          background: rgba(0, 0, 0, 0.25);
-        }
-        &.off-menu {
-          opacity: 0;
-          transform: translateY(30%);
-        }
-        &.on-menu {
-          opacity: 1;
-          transform: translateY(0%);
-        }
+  // .sub-menu {
+  //   --link-height: 60px;
+  //   position: absolute;
+  //   top: 50%;
+  //   left: 0;
+  //   width: 100%;
+  //   transform: translateY(-50%);
+  //   ol {
+  //     list-style: none;
+  //     li {
+  //       @include flex-center();
+  //       height: var(--link-height);
+  //       transition: all var(--transition-time) ease;
+  //       transition-delay: calc(30ms + var(--delay));
+  //       cursor: pointer;
+  //       &:hover {
+  //         background: rgba(0, 0, 0, 0.25);
+  //       }
+  //       &.off-menu {
+  //         opacity: 0;
+  //         transform: translateY(30%);
+  //       }
+  //       &.on-menu {
+  //         opacity: 1;
+  //         transform: translateY(0%);
+  //       }
 
-        a {
-          font-size: 1.2rem;
-          font-weight: normal;
-        }
-      }
-    }
-  }
+  //       a {
+  //         font-size: 1.2rem;
+  //         font-weight: normal;
+  //       }
+  //     }
+  //   }
+  // }
 
   // Buttons
   .sub-menu-btn {
@@ -239,7 +240,7 @@ nav {
     @include flex-center();
     --icon-width: 25px;
     position: absolute;
-    top: 5%;
+    top: 1%;
     right: -15%;
     width: calc(var(--icon-width) + 25px);
     height: calc(var(--icon-width) + 25px);

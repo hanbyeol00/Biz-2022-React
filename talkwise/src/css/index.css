@@ -4,10 +4,12 @@
   padding: 0;
 }
 
-html,
-body {
+html {
   height: 100vh;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
+}
+body {
+  height: 100%;
 }
 div#root {
   height: 100%;

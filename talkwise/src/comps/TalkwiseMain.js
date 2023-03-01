@@ -10,6 +10,7 @@ const TalkwiseMain = () => {
   const { listen, listening, stop } = useSpeechRecognition({
     onResult: (result) => {
       // 음성인식 결과가 value 상태값으로 할당됩니다.
+      // console.log(123);
       setQuestion(result);
     },
   });
@@ -24,30 +25,35 @@ const TalkwiseMain = () => {
     const audio = new Audio(`data:audio/mp3;base64,${base64Audio}`);
     audio.play();
   };
-  const translation = async () => {
-    setLoading(true);
-    setQuestion("너가 할수 있는게 뭐가 있니?");
-    const fetchOption = {
-      method: "POST",
-      body: JSON.stringify({ voice: question }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const res = await fetch("/test/papago", fetchOption);
-    const { text, audioContent } = await res.json();
-    setAnswering(text);
-    setBase64Audio(audioContent);
-    setLoading(false);
-  };
 
-  // useEffect(() => {
-  //   if (question) {
-  //     translation();
-  //   }
-  // }, [question]);
+  useEffect(() => {
+    const translation = async () => {
+      setLoading(() => {
+        stop();
+        return true;
+      });
+      // setQuestion("너가 할수 있는게 뭐가 있니?");
+      const fetchOption = {
+        method: "POST",
+        body: JSON.stringify({ voice: question }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const res = await fetch("/test/papago", fetchOption);
+      const { text, audioContent } = await res.json();
+      setAnswering(text);
+      setBase64Audio(audioContent);
+      setLoading(false);
+    };
+
+    if (question) {
+      translation();
+    }
+  }, [question]);
 
   const handleListen = () => {
+    setBookmarkColor("");
     setQuestion("");
     setAnswering("");
     listen({ interimResults: false });
@@ -87,9 +93,9 @@ const TalkwiseMain = () => {
         <label>질문내용:</label>
         <textarea className="question" disabled value={question} />
         <button
-          //   onMouseDown={() => listen({ interimResults: false })}
-          //   onMouseUp={stop}
-          onClick={translation}
+          // onMouseDown={() => listen({ interimResults: false })}
+          // onMouseUp={stop}
+          onClick={handleListen}
           className="voice-button"
           disabled={loading ? "disabled" : ""}
         >
