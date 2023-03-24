@@ -24,33 +24,39 @@ const TalkwiseMain = () => {
   const audioPlay = () => {
     const audio = new Audio(`data:audio/mp3;base64,${base64Audio}`);
     audio.play();
+    console.log(123);
+    if (!audio.paused && !audio.ended) {
+      console.log("오디오가 현재 재생 중입니다.");
+    } else {
+      console.log("오디오가 재생되지 않았거나 종료되었습니다.");
+    }
   };
 
-  useEffect(() => {
-    const translation = async () => {
-      setLoading(() => {
-        stop();
-        return true;
-      });
-      // setQuestion("너가 할수 있는게 뭐가 있니?");
-      const fetchOption = {
-        method: "POST",
-        body: JSON.stringify({ voice: question }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const res = await fetch("/test/papago", fetchOption);
-      const { text, audioContent } = await res.json();
-      setAnswering(text);
-      setBase64Audio(audioContent);
-      setLoading(false);
+  const translation = async () => {
+    setLoading(() => {
+      stop();
+      return true;
+    });
+    setQuestion("너가 할수 있는게 뭐가 있니?");
+    const fetchOption = {
+      method: "POST",
+      body: JSON.stringify({ voice: question }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     };
+    const res = await fetch("/test/papago", fetchOption);
+    const { text, audioContent } = await res.json();
+    setAnswering(text);
+    setBase64Audio(audioContent);
+    setLoading(false);
+  };
+  // useEffect(() => {
 
-    if (question) {
-      translation();
-    }
-  }, [question]);
+  //   if (question) {
+  //     translation();
+  //   }
+  // }, [question]);
 
   const handleListen = () => {
     setBookmarkColor("");
@@ -95,7 +101,7 @@ const TalkwiseMain = () => {
         <button
           // onMouseDown={() => listen({ interimResults: false })}
           // onMouseUp={stop}
-          onClick={handleListen}
+          onClick={translation}
           className="voice-button"
           disabled={loading ? "disabled" : ""}
         >

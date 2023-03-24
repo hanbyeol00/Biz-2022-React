@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../css/style.scss";
 import CategoryAddModal from "./CategoryAddModal";
+import CustomContextMenu from "./CustomContextMenu";
 
 function Bookmark() {
-  const [selectedCategory, setSelectedCategory] = useState({ category: "All" });
+  const [selectedCategory, setSelectedCategory] = useState({
+    category: "All",
+  });
   const [categoryItem, setCategoryItem] = useState([]);
   const [data, setData] = useState([]);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [audioID, setAudioID] = useState("");
+  const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [categoryEdit, setCategoryEdit] = useState({
     prevCategory: "",
     t_seq: [],
@@ -103,16 +108,46 @@ function Bookmark() {
       const base64Audio = await res.json();
       const audio = new Audio(`data:audio/mp3;base64,${base64Audio.audio}`);
       audio.play();
+      audio.addEventListener("ended", () => {
+        console.log("오디오가 종료되었습니다.");
+      });
       return audio;
     } catch (error) {
       alert(error.message);
     }
   };
 
+  const onContextMenuHandler = (e) => {
+    e.preventDefault();
+    setContextMenuPosition({
+      top: e.pageY + "px", // 마우스 클릭 위치
+      left: e.pageX + "px", // 마우스 클릭 위치
+    });
+  };
+
+  const closeContextMenu = () => {
+    setContextMenuPosition(null); // 메뉴 닫기
+  };
+
+  const onBookmarkDeleteHandler = async () => {
+    if (window.confirm("북마크를 삭제하시겠습니까?")) {
+      setSelectedCategory((prevState) => ({ ...prevState, category: "All" }));
+      await fetch(`/test/all/bookmark/delete`, {
+        method: "DELETE",
+        body: JSON.stringify({ t_seq: audioID }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } else {
+      return;
+    }
+  };
+
   return (
     <div className="BookMark">
       <div className="nav-container">
-        <nav className={isNavOpen ? "nav-open" : ""}>
+        <nav className={isNavOpen ? "nav-open category" : "category"}>
           <div className="menu-btn" onClick={toggleNav}>
             <div className="line line__1"></div>
             <div className="line line__2"></div>
@@ -156,15 +191,16 @@ function Bookmark() {
         <header className="App-header">
           <h1 className="FAQ">FAQ</h1>
           <h2
-            className="category"
-            style={{
-              marginLeft: selectedCategory.category === "All" ? "13em" : "15em",
-            }}
+            className={
+              selectedCategory.category === "All"
+                ? "category-all"
+                : "category-list"
+            }
           >
             카테고리 : {selectedCategory.category}
             {selectedCategory.category !== "All" && (
               <span
-                className="bookmark-delete"
+                className="bookmarks-delete"
                 data-category={selectedCategory.category}
                 onClick={onDeleteHandler}
               >
@@ -174,20 +210,37 @@ function Bookmark() {
           </h2>
         </header>
         <main>
-          {data.map((qa, index) => (
-            <div
-              key={index}
-              className="qa-set"
-              onClick={() => {
-                audioPlay(qa.t_seq);
-              }}
-            >
-              <h2>{qa.f_talk_cate.question}</h2>
-              <p>{qa.f_talk_cate.answer}</p>
-            </div>
-          ))}
+          {selectedCategory.category === "All"
+            ? data.map((qa, index) => (
+                <div
+                  key={index}
+                  className="qa-set"
+                  onContextMenu={(e) => {
+                    onContextMenuHandler(e);
+                    setAudioID(qa.t_seq);
+                  }}
+                >
+                  <div className="question">{qa.f_talk_cate.question}</div>
+                  <p>{qa.f_talk_cate.answer}</p>
+                </div>
+              ))
+            : data.map((qa, index) => (
+                <div key={index} className="qa-set">
+                  <div className="question">{qa.f_talk_cate.question}</div>
+                  <p>{qa.f_talk_cate.answer}</p>
+                </div>
+              ))}
         </main>
       </div>
+      {contextMenuPosition && (
+        <CustomContextMenu
+          audioPlay={audioPlay}
+          audioID={audioID}
+          onDeleteHandler={onBookmarkDeleteHandler}
+          style={contextMenuPosition}
+          onClose={closeContextMenu}
+        />
+      )}
       <CategoryAddModal
         isOpen={isOpen}
         toggleModal={toggleModal}
